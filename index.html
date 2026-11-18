@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Каталог</title>
+  <meta name="description" content="Каталог одежды и аксессуаров по предзаказу">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Archivo+Narrow:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="announce" id="announce"></div>
+
+  <header class="header">
+    <button class="icon-btn" id="menu-btn" aria-label="Меню" aria-expanded="false">
+      <svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 1h20M0 7h20M0 13h20"/></svg>
+    </button>
+    <a href="#" class="logo" id="logo"></a>
+    <a href="#catalog" class="header__link">Каталог</a>
+  </header>
+
+  <nav class="drawer" id="drawer" hidden>
+    <div id="drawer-links"></div>
+  </nav>
+
+  <section class="hero" id="hero">
+    <div class="hero__content">
+      <h1 class="hero__title" id="hero-title"></h1>
+      <p class="hero__text" id="about"></p>
+      <div class="hero__links">
+        <a href="#catalog" class="ulink">Смотреть каталог</a>
+        <a href="#how" class="ulink">Как заказать</a>
+      </div>
+    </div>
+  </section>
+
+  <main id="catalog" class="catalog">
+    <div class="catalog__bar">
+      <h2 class="catalog__title">Коллекция <span id="count"></span></h2>
+      <div class="filters" id="filters" role="tablist" aria-label="Категории"></div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <section class="steps" id="how">
+    <span class="ulink-static">01 Выберите вещь</span>
+    <span class="ulink-static">02 Оставьте предзаказ</span>
+    <span class="ulink-static">03 Мы свяжемся и подтвердим</span>
+  </section>
+
+  <footer class="footer">
+    <details class="acc">
+      <summary>О предзаказе</summary>
+      <p>Мы шьём небольшими партиями. После заявки уточним размер, сроки и способ оплаты. Оплата — только после подтверждения.</p>
+    </details>
+    <details class="acc">
+      <summary>Доставка</summary>
+      <p>Отправляем по России службами СДЭК и Почта России. Стоимость рассчитываем при подтверждении заказа.</p>
+    </details>
+    <details class="acc" id="acc-socials" hidden>
+      <summary>Мы в соцсетях</summary>
+      <p id="socials"></p>
+    </details>
+    <p class="footer__copy" id="copyright"></p>
+  </footer>
+
+  <!-- Окно предзаказа -->
+  <dialog class="modal" id="modal">
+    <form class="modal__body" id="order-form" method="dialog">
+      <button type="button" class="modal__close" id="modal-close" aria-label="Закрыть">
+        <svg width="14" height="14" viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.5"><path d="M1 1l12 12M13 1L1 13"/></svg>
+      </button>
+      <div class="modal__product">
+        <div class="modal__thumb" id="m-thumb"></div>
+        <div>
+          <p class="label" id="m-cat"></p>
+          <h2 id="m-name"></h2>
+          <p class="modal__price" id="m-price"></p>
+          <p class="modal__desc" id="m-desc"></p>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <label class="field" id="size-field">Размер
+          <select name="size" id="m-size"></select>
+        </label>
+        <label class="field" id="color-field">Цвет
+          <select name="color" id="m-color"></select>
+        </label>
+      </div>
+      <label class="field">Имя*
+        <input name="name" required autocomplete="name" placeholder="Как к вам обращаться">
+      </label>
+      <label class="field">Телефон, Telegram или email*
+        <input name="contact" required placeholder="Куда вам ответить">
+      </label>
+      <label class="field">Комментарий
+        <input name="comment" placeholder="Необязательно">
+      </label>
+
+      <button type="submit" class="btn" id="m-submit">Отправить предзаказ</button>
+      <p class="modal__status" id="m-status" role="status"></p>
+    </form>
+  </dialog>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
