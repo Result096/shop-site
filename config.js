@@ -1,132 +1,116 @@
 // ============================================================
-//  НАСТРОЙКИ МАГАЗИНА — меняйте всё здесь, остальные файлы трогать не нужно
+//  НАСТРОЙКИ МАГАЗИНА И ТОВАРЫ
+//  Тексты страниц — в файле i18n.js
 // ============================================================
 
 const SHOP = {
-  name: "ATELIER",                       // название магазина
-  tagline: "Одежда и аксессуары по предзаказу",
-  about:
-    "Мы шьём небольшими партиями. Оставьте предзаказ — мы свяжемся с вами, " +
-    "уточним размер и сроки. Оплата только после подтверждения.",
-  currency: "₽",
+  name: "MONACO KG ESSENTIALS",
+  shortName: "MONACO KG",
+  currency: "€",            // знак валюты для цен
 
-  // Чёрная полоса сверху (оставьте "", чтобы убрать)
-  announcement: "Предзаказ открыт · Оплата после подтверждения",
-
-  // Большое фото на первом экране, например "images/hero.jpg". Пусто — тёмный фон.
-  heroImage: "",
-
-  // ID формы Formspree (см. README.md → «Как включить форму предзаказа»).
-  // Пример: если адрес формы https://formspree.io/f/xyzabcd — сюда пишем "xyzabcd".
+  // ID формы Formspree (см. README.md). Пример: "xyzabcd"
   formspreeId: "",
 
-  // Контакты в подвале сайта (оставьте пустым, если не нужно)
-  instagram: "",   // например "atelier.shop"
-  telegram: "",    // например "atelier_shop"
+  email: "[hello@domain]",  // почта для покупателей (страница «Контакты»)
+  whatsapp: "",             // номер в международном формате, например "+33612345678"
+  instagram: "",            // ник без @, например "monacokg"
+  tiktok: "",               // ник без @
+
+  heroImage: "",            // фото первого экрана, например "images/hero.jpg"
+  aboutImage: "",           // большое фото на странице «О бренде»
+  communityImages: [],      // 4 фото для блока «Одна семья», например ["images/c1.jpg", ...]
 };
 
 // ============================================================
-//  ТОВАРЫ
-//  image — путь к фото в папке images, например "images/coat.jpg".
-//  Если фото нет, оставьте "" — будет красивая заглушка.
-//  status: "preorder" — можно заказать, "soon" — скоро, "soldout" — партия закончилась
+//  ТОВАРЫ — ПРИМЕРЫ. Замените на свои.
+//  category: tops | hoodies | pants | accessories
+//  price: число или null (будет «Цена уточняется»)
+//  images: ["images/xxx-1.jpg", "images/xxx-2.jpg", ...] — первое фото в каталоге, второе при наведении
+//  status: "preorder" или "soon"
+//  name / description / composition — на трёх языках
 // ============================================================
+
+const COLORS = {
+  black: { hex: "#111111", en: "Black", ru: "Чёрный", fr: "Noir" },
+  grey:  { hex: "#BDBDBD", en: "Grey",  ru: "Серый",  fr: "Gris" },
+  white: { hex: "#FFFFFF", en: "White", ru: "Белый",  fr: "Blanc" },
+  olive: { hex: "#6B6A3E", en: "Olive", ru: "Оливковый", fr: "Olive" },
+  navy:  { hex: "#1F2A44", en: "Navy",  ru: "Тёмно-синий", fr: "Marine" },
+  red:   { hex: "#B3261E", en: "Red",   ru: "Красный", fr: "Rouge" },
+  blue:  { hex: "#7FA3C7", en: "Light blue", ru: "Голубой", fr: "Bleu clair" },
+};
 
 const PRODUCTS = [
   {
-    id: "coat-wool",
-    name: "Пальто из шерсти",
-    category: "Верхняя одежда",
-    price: 18900,
-    sizes: ["XS", "S", "M", "L"],
-    colors: ["Графит", "Кэмел"],
-    description: "Прямой крой, плотная итальянская шерсть, подклад из вискозы.",
-    image: "",
-    color: "#b9a38a",
-    status: "preorder",
+    id: "tee-essential", category: "tops", price: null, status: "preorder", isNew: true,
+    name: { en: "[Essential T-shirt]", ru: "[Базовая футболка]", fr: "[T-shirt Essential]" },
+    colors: ["black", "white", "grey"], sizes: ["XS", "S", "M", "L", "XL"], images: [],
+    description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
+    composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
   {
-    id: "trench",
-    name: "Тренч классический",
-    category: "Верхняя одежда",
-    price: 14500,
-    sizes: ["S", "M", "L"],
-    colors: ["Бежевый"],
-    description: "Хлопковый габардин, пояс и съёмные погоны.",
-    image: "",
-    color: "#d6c4a5",
-    status: "preorder",
+    id: "hoodie-half-zip", category: "hoodies", price: null, status: "preorder", isNew: true,
+    name: { en: "[Half-zip hoodie]", ru: "[Худи на полумолнии]", fr: "[Sweat demi-zip]" },
+    colors: ["olive", "black"], sizes: ["XS", "S", "M", "L", "XL"], images: [],
+    description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
+    composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
   {
-    id: "knit-sweater",
-    name: "Свитер оверсайз",
-    category: "Трикотаж",
-    price: 7200,
-    sizes: ["One size"],
-    colors: ["Молочный", "Шоколад"],
-    description: "Мериносовая шерсть с кашемиром, мягкий и тёплый.",
-    image: "",
-    color: "#e8ddd0",
-    status: "preorder",
+    id: "track-jacket", category: "hoodies", price: null, status: "preorder", isNew: true,
+    name: { en: "[Zip track jacket]", ru: "[Спортивная куртка на молнии]", fr: "[Veste zippée]" },
+    colors: ["navy", "black"], sizes: ["S", "M", "L", "XL"], images: [],
+    description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
+    composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
   {
-    id: "linen-shirt",
-    name: "Рубашка из льна",
-    category: "Рубашки",
-    price: 5400,
-    sizes: ["XS", "S", "M", "L", "XL"],
-    colors: ["Белый", "Олива"],
-    description: "Свободный силуэт, стираный лён, перламутровые пуговицы.",
-    image: "",
-    color: "#c9cdb8",
-    status: "soon",
+    id: "flared-pants", category: "pants", price: null, status: "preorder", isNew: true,
+    name: { en: "[Flared pants]", ru: "[Брюки-клёш]", fr: "[Pantalon évasé]" },
+    colors: ["black"], sizes: ["XS", "S", "M", "L"], images: [],
+    description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
+    composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
   {
-    id: "wide-trousers",
-    name: "Брюки широкие",
-    category: "Брюки",
-    price: 6800,
-    sizes: ["XS", "S", "M", "L"],
-    colors: ["Чёрный", "Серый"],
-    description: "Высокая посадка, заутюженные стрелки, костюмная ткань.",
-    image: "",
-    color: "#8f8f8f",
-    status: "preorder",
+    id: "shorts", category: "pants", price: null, status: "preorder", isNew: false,
+    name: { en: "[Shorts]", ru: "[Шорты]", fr: "[Short]" },
+    colors: ["black", "red"], sizes: ["XS", "S", "M", "L", "XL"], images: [],
+    description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
+    composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
   {
-    id: "leather-bag",
-    name: "Сумка-шопер из кожи",
-    category: "Аксессуары",
-    price: 9900,
-    sizes: [],
-    colors: ["Коньяк", "Чёрный"],
-    description: "Натуральная кожа, внутренний карман на молнии.",
-    image: "",
-    color: "#9c6b4a",
-    status: "preorder",
+    id: "denim-jacket", category: "hoodies", price: null, status: "soon", isNew: false,
+    name: { en: "[Denim jacket]", ru: "[Джинсовая куртка]", fr: "[Veste en jean]" },
+    colors: ["blue", "black"], sizes: ["S", "M", "L", "XL"], images: [],
+    description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
+    composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
   {
-    id: "silk-scarf",
-    name: "Платок шёлковый",
-    category: "Аксессуары",
-    price: 3200,
-    sizes: [],
-    colors: ["Принт «Сад»"],
-    description: "Натуральный шёлк, ручная подшивка края, 90×90 см.",
-    image: "",
-    color: "#c7a0a0",
-    status: "soldout",
+    id: "longsleeve", category: "tops", price: null, status: "preorder", isNew: false,
+    name: { en: "[Longsleeve]", ru: "[Лонгслив]", fr: "[T-shirt manches longues]" },
+    colors: ["black", "white"], sizes: ["XS", "S", "M", "L", "XL"], images: [],
+    description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
+    composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
   {
-    id: "wool-beret",
-    name: "Берет шерстяной",
-    category: "Аксессуары",
-    price: 2400,
-    sizes: [],
-    colors: ["Бордо", "Чёрный"],
-    description: "Валяная шерсть, классическая форма.",
-    image: "",
-    color: "#7a3b3f",
-    status: "preorder",
+    id: "socks", category: "accessories", price: null, status: "preorder", isNew: false,
+    name: { en: "[Socks]", ru: "[Носки]", fr: "[Chaussettes]" },
+    colors: ["white", "black"], sizes: ["One size"], images: [],
+    description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
+    composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
 ];
+
+// ============================================================
+//  ТАБЛИЦА РАЗМЕРОВ (в сантиметрах; дюймы считаются сами)
+//  [грудь, талия, бёдра, длина]; null = «—»
+// ============================================================
+
+const SIZE_CHART = {
+  tops: {
+    XS: [null, null, null, null], S: [null, null, null, null], M: [null, null, null, null],
+    L: [null, null, null, null], XL: [null, null, null, null],
+  },
+  bottoms: {
+    XS: [null, null, null, null], S: [null, null, null, null], M: [null, null, null, null],
+    L: [null, null, null, null], XL: [null, null, null, null],
+  },
+};
