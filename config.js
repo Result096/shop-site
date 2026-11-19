@@ -16,7 +16,7 @@ const SHOP = {
   instagram: "",            // ник без @, например "monacokg"
   tiktok: "",               // ник без @
 
-  heroImage: "",            // фото первого экрана, например "images/hero.jpg"
+  heroImage: "images/hero.jpg", // фото первого экрана
   aboutImage: "",           // большое фото на странице «О бренде»
   communityImages: [],      // 3 фото для карточек «Наша история / Предзаказ / Контакты»
   categoryImages: {         // большие фото категорий на главной
