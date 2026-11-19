@@ -68,15 +68,36 @@
     if (SHOP.instagram) soc.push(`<a href="https://instagram.com/${esc(SHOP.instagram)}" target="_blank" rel="noopener">Instagram</a>`);
     if (SHOP.tiktok) soc.push(`<a href="https://tiktok.com/@${esc(SHOP.tiktok)}" target="_blank" rel="noopener">TikTok</a>`);
     if (!soc.length) soc.push(`<span>Instagram</span>`, `<span>TikTok</span>`);
-    return `<footer class="footer">
-      <div class="footer__grid">
-        <div><img class="footer__logo" src="images/logo.png" alt="${esc(SHOP.name)}" width="429" height="320" loading="lazy"><p class="muted">${t("hero_title")}</p></div>
-        <div><p class="footer__h">${esc(t("f_shop"))}</p><a href="${href("shop")}">${esc(t("f_all_products"))}</a><a href="${href("shop")}">${esc(t("f_new"))}</a></div>
-        <div><p class="footer__h">${esc(t("f_help"))}</p><a href="${href("how")}">${esc(t("nav_how"))}</a><a href="${href("how?s=faq")}">FAQ</a><a href="${href("size")}">${esc(t("size_guide"))}</a><a href="${href("contact")}">${esc(t("nav_contact"))}</a></div>
-        <div><p class="footer__h">${esc(t("f_follow"))}</p>${soc.join("")}</div>
+    const lt = t("legal_tabs");
+    const acc = (title, links) => `<details class="facc"><summary>${esc(title)}</summary><div class="facc__links">${links}</div></details>`;
+    const contact = [
+      SHOP.email.startsWith("[") ? `<span>${esc(SHOP.email)}</span>` : `<a href="mailto:${esc(SHOP.email)}">${esc(SHOP.email)}</a>`,
+      SHOP.whatsapp ? `<a href="https://wa.me/${esc(SHOP.whatsapp.replace(/\D/g, ""))}" target="_blank" rel="noopener">WhatsApp</a>` : "",
+      `<a href="${href("contact")}">${esc(t("contact_title"))}</a>`,
+    ].join("");
+    const opts = Object.keys(LANGS).map((l) => `<option value="${l}"${l === lang ? " selected" : ""}>${esc(LANGS[l])}</option>`).join("");
+    const stripLinks = ["how", "how?s=faq", "size"];
+    return `
+    <nav class="strip" aria-label="Info">${t("strip").map((s, i) => `<a class="ulink" href="${href(stripLinks[i])}">0${i + 1} ${esc(s)}</a>`).join("")}</nav>
+    <footer class="footer">
+      <div class="footer__cols">
+        <div class="footer__acc">
+          ${acc(t("f_contact"), contact)}
+          ${acc(t("f_shop"), `<a href="${href("shop")}">${esc(t("f_all_products"))}</a><a href="${href("shop")}">${esc(t("f_new"))}</a>`)}
+          ${acc(t("f_help"), `<a href="${href("how")}">${esc(t("nav_how"))}</a><a href="${href("how?s=faq")}">FAQ</a><a href="${href("size")}">${esc(t("size_guide"))}</a>`)}
+          ${acc(t("f_follow"), soc.join(""))}
+          ${acc(t("f_legal"), Object.keys(lt).map((k) => `<a href="${href("legal/" + k)}">${esc(lt[k])}</a>`).join(""))}
+        </div>
+        <div class="footer__side">
+          <p class="footer__h">${esc(SHOP.shortName)}</p>
+          <p class="footer__muted">${t("hero_title")}</p>
+          <label class="footer__lang"><span>${esc(t("language"))}</span><select id="lang-select-f">${opts}</select></label>
+        </div>
       </div>
-      <div class="footer__bottom"><span>© ${new Date().getFullYear()} ${esc(SHOP.name)}</span>
-        <span><a href="${href("legal/privacy")}">${esc(t("legal_tabs").privacy)}</a><a href="${href("legal/terms")}">${esc(t("terms"))}</a></span></div>
+      <div class="footer__bottom">
+        <img class="footer__logo" src="images/logo.png" alt="${esc(SHOP.name)}" width="429" height="320" loading="lazy">
+        <span>© ${new Date().getFullYear()} ${esc(SHOP.name)}</span>
+      </div>
     </footer>`;
   }
 
@@ -95,38 +116,66 @@
   // ---------- pages ----------
   const pages = {};
 
+  // Home follows the reference layout: full-bleed hero → product rail → category rail →
+  // dark numbered editorial block → three brand cards. Small uppercase labels, underlined links.
+  const railCtl = () => `<div class="rail__ctl">
+      <button type="button" data-rail="-1" aria-label="${esc(t("prev"))}"><svg width="8" height="12" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M7 1L2 6l5 5"/></svg></button>
+      <button type="button" data-rail="1" aria-label="${esc(t("next"))}"><svg width="8" height="12" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M1 1l5 5-5 5"/></svg></button>
+    </div>`;
+
   pages.home = () => {
-    const fresh = PRODUCTS.filter((p) => p.isNew).slice(0, 4);
-    const list = (fresh.length ? fresh : PRODUCTS.slice(0, 4)).map(card).join("");
-    const comm = [0, 1, 2, 3].map((i) => photoOr(SHOP.communityImages[i], t("community_ph"), "sq")).join("");
+    const items = PRODUCTS.slice().sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+    const tiles = items.map((p) => `<a class="tile" href="${href("product/" + p.id)}">
+        <div class="tile__media">${media(p, 0)}</div>
+        <span class="tile__cap"><span>${esc(L(p.name))}</span><span>${esc(price(p))}</span></span></a>`).join("");
+    const cats = Object.keys(T.en.cats).filter((c) => PRODUCTS.some((p) => p.category === c));
+    const catTiles = cats.map((c) => `<a class="cat" href="${href("shop?cat=" + c)}">
+        ${SHOP.categoryImages[c] ? `<img src="${esc(SHOP.categoryImages[c])}" alt="" loading="lazy">` : `<div class="cat__ph"></div>`}
+        <span class="cat__label">${esc(t("cats")[c])}</span></a>`).join("");
+    const cardLinks = t("cards").map(([title, page], i) => `<a class="bcard" href="${href(page)}">
+        ${SHOP.communityImages[i] ? `<img src="${esc(SHOP.communityImages[i])}" alt="" loading="lazy">` : `<div class="bcard__ph"></div>`}
+        <span class="bcard__t">${esc(title)}</span><span class="bcard__l">${esc(t("view_more"))}</span></a>`).join("");
+
     return `
     <section class="hero" ${SHOP.heroImage ? `style="background-image:url('${esc(SHOP.heroImage)}')"` : ""}>
-      <div class="hero__content">
-        <h1 class="hero__title">${t("hero_title")}</h1>
-        <a class="btn btn--light" href="${href("shop")}">${esc(t("hero_cta"))}</a>
+      <div class="hero__grid">
+        <div class="hero__text">
+          <h1 class="hero__title">${t("hero_title")}</h1>
+          <p>${esc(t("hero_sub"))}</p>
+        </div>
+        <a class="ulink hero__l1" href="${href("about")}">${esc(t("discover_more"))}</a>
+        <a class="ulink hero__l2" href="${href("shop")}">${esc(t("shop_now"))}</a>
       </div>
     </section>
-    <section class="block center">
-      <p class="eyebrow">${esc(t("vision_eyebrow"))}</p>
-      <p class="lead">${esc(t("vision_text"))}</p>
-      <a class="ulink" href="${href("about")}">${esc(t("our_story"))} →</a>
-    </section>
-    <section class="block">
-      <div class="row-head"><h2 class="h2">${esc(t("new_arrivals"))}</h2><a class="ulink" href="${href("shop")}">${esc(t("view_all"))}</a></div>
-      <div class="grid">${list}</div>
-    </section>
-    <section class="band">
-      <div class="block">
-        <p class="eyebrow">${esc(t("how_eyebrow"))}</p>
-        <h2 class="h2">${esc(t("how_title"))}</h2>
-        <div class="steps">${t("steps3").map(([h, d], i) => `<div><span class="num">0${i + 1}</span><h3>${esc(h)}</h3><p>${esc(d)}</p></div>`).join("")}</div>
-        <a class="btn btn--ghost" href="${href("how")}">${esc(t("learn_more"))}</a>
+
+    <section class="rail">
+      <div class="rail__head">
+        <h2 class="h2">${esc(t("new_arrivals"))}</h2>
+        <a class="ulink rail__link" href="${href("shop")}">${esc(t("shop_now"))}</a>
+        ${railCtl()}
       </div>
+      <div class="rail__track">${tiles}</div>
     </section>
-    <section class="block center">
-      <h2 class="h2 h2--big">${t("community_title")}</h2>
-      <div class="comm">${comm}</div>
-      ${SHOP.instagram ? `<a class="btn btn--ghost" href="https://instagram.com/${esc(SHOP.instagram)}" target="_blank" rel="noopener">${esc(t("follow_us"))} @${esc(SHOP.instagram)}</a>` : ""}
+
+    <section class="rail rail--cats">
+      <div class="rail__head">
+        <h2 class="h2">${esc(t("by_category"))}</h2>
+        <span class="label rail__link">${esc(SHOP.season)}</span>
+        ${railCtl()}
+      </div>
+      <div class="rail__track rail__track--cats">${catTiles}</div>
+    </section>
+
+    <section class="edit" ${SHOP.editorialImage ? `style="background-image:url('${esc(SHOP.editorialImage)}')"` : ""}>
+      <div class="edit__grid">
+        ${t("steps3").map(([h, d], i) => `<div class="edit__item"><p class="label">+ 00${i + 1}</p><h3 class="h3">${esc(h)}</h3><p>${esc(d)}</p></div>`).join("")}
+      </div>
+      <a class="ulink" href="${href("how")}">${esc(t("discover_more"))}</a>
+    </section>
+
+    <section class="cards">
+      <h2 class="h2">${esc(t("cards_title"))}</h2>
+      <div class="cards__grid">${cardLinks}</div>
     </section>`;
   };
 
@@ -438,6 +487,11 @@
     menuBtn.onclick = () => { drawer.hidden = !drawer.hidden; menuBtn.setAttribute("aria-expanded", String(!drawer.hidden)); };
 
     document.getElementById("lang-select").onchange = (e) => switchLang(e.target.value);
+    document.getElementById("lang-select-f").onchange = (e) => switchLang(e.target.value);
+    document.querySelectorAll("[data-rail]").forEach((b) => (b.onclick = () => {
+      const track = b.closest(".rail").querySelector(".rail__track");
+      track.scrollBy({ left: Number(b.dataset.rail) * track.clientWidth * 0.8, behavior: "smooth" });
+    }));
     const banner = document.getElementById("lang-banner");
     if (banner) banner.onclick = (e) => {
       const b = e.target.closest("button"); if (!b) return;
@@ -465,6 +519,7 @@
 
   function bindProduct() {
     const box = document.getElementById("pdp");
+    if (!box) return; // unknown product id → 404 page, nothing to bind
     const p = byId(box.dataset.id);
     let color = p.colors[0];
     let size = p.sizes.length === 1 ? p.sizes[0] : null;
