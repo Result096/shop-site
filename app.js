@@ -57,7 +57,7 @@
           <svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 1h20M0 7h20M0 13h20"/></svg>
         </button>
         <nav class="nav" aria-label="Main">${nav}</nav>
-        <a class="logo" href="${href("")}">${esc(SHOP.name)}</a>
+        <a class="logo" href="${href("")}"><img src="images/logo-header.png" alt="${esc(SHOP.name)}" width="368" height="240"></a>
         <label class="lang"><span class="sr">Language</span><select id="lang-select">${opts}</select></label>
       </header>
       <nav class="drawer" id="drawer" hidden>${nav}</nav>`;
@@ -70,7 +70,7 @@
     if (!soc.length) soc.push(`<span>Instagram</span>`, `<span>TikTok</span>`);
     return `<footer class="footer">
       <div class="footer__grid">
-        <div><p class="footer__brand">${esc(SHOP.shortName)}</p><p class="muted">${t("hero_title")}</p></div>
+        <div><img class="footer__logo" src="images/logo.png" alt="${esc(SHOP.name)}" width="429" height="320" loading="lazy"><p class="muted">${t("hero_title")}</p></div>
         <div><p class="footer__h">${esc(t("f_shop"))}</p><a href="${href("shop")}">${esc(t("f_all_products"))}</a><a href="${href("shop")}">${esc(t("f_new"))}</a></div>
         <div><p class="footer__h">${esc(t("f_help"))}</p><a href="${href("how")}">${esc(t("nav_how"))}</a><a href="${href("how?s=faq")}">FAQ</a><a href="${href("size")}">${esc(t("size_guide"))}</a><a href="${href("contact")}">${esc(t("nav_contact"))}</a></div>
         <div><p class="footer__h">${esc(t("f_follow"))}</p>${soc.join("")}</div>
