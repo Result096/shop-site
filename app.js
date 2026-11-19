@@ -46,7 +46,7 @@
   }
 
   // ---------- layout ----------
-  // Header: "Collection" on the left, logo in the middle, contact + language on the right.
+  // Header: Collection / About / Pre-order on the left, logo in the middle, contact + language on the right.
   // On the home page it lies transparent over the hero photo (white text, outlined logo).
   function header(active, over) {
     const links = [["shop", "nav_collection"], ["about", "nav_about"], ["how", "nav_how"], ["contact", "nav_contact"]];
@@ -60,7 +60,7 @@
             <button class="icon-btn menu-btn" id="menu-btn" aria-label="${esc(t("menu"))}" aria-expanded="false">
               <svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 1h20M0 7h20M0 13h20"/></svg>
             </button>
-            <a class="hlink" href="${href("shop")}"${active === "shop" ? ' aria-current="page"' : ""}>${esc(t("nav_collection"))}</a>
+            ${links.slice(0, 3).map(([p, k]) => `<a class="hlink" href="${href(p)}"${active === p ? ' aria-current="page"' : ""}>${esc(t(k))}</a>`).join("")}
           </div>
           <a class="logo" href="${href("")}"><img src="${over ? "images/logo.png" : "images/logo-header.png"}" alt="${esc(SHOP.name)}" width="${over ? 429 : 368}" height="${over ? 320 : 240}"></a>
           <div class="header__r">
@@ -72,32 +72,40 @@
       </div>`;
   }
 
-  // Footer: black block with two brand texts and the logo in the middle, small links row below.
+  // Footer: numbered info strip → black brand block from the mock-up (two texts + logo) →
+  // the earlier accordion sections (Contact / Shop / Help / Follow / Legal) + language → copyright.
   function footer() {
+    const soc = [];
+    if (SHOP.instagram) soc.push(`<a href="https://instagram.com/${esc(SHOP.instagram)}" target="_blank" rel="noopener">Instagram</a>`);
+    if (SHOP.tiktok) soc.push(`<a href="https://tiktok.com/@${esc(SHOP.tiktok)}" target="_blank" rel="noopener">TikTok</a>`);
+    if (!soc.length) soc.push(`<span>Instagram</span>`, `<span>TikTok</span>`);
     const lt = t("legal_tabs");
-    const links = [
-      [href("about"), t("nav_about")], [href("how"), t("nav_how")], [href("how?s=faq"), "FAQ"],
-      [href("size"), t("size_guide")], [href("contact"), t("nav_contact")],
-      ...Object.keys(lt).map((k) => [href("legal/" + k), lt[k]]),
-    ];
-    if (SHOP.instagram) links.push(["https://instagram.com/" + SHOP.instagram, "Instagram"]);
-    if (SHOP.tiktok) links.push(["https://tiktok.com/@" + SHOP.tiktok, "TikTok"]);
-    if (SHOP.whatsapp) links.push(["https://wa.me/" + SHOP.whatsapp.replace(/\D/g, ""), "WhatsApp"]);
+    const acc = (title, links) => `<details class="facc"><summary>${esc(title)}</summary><div class="facc__links">${links}</div></details>`;
+    const contact = [
+      SHOP.email.startsWith("[") ? `<span>${esc(SHOP.email)}</span>` : `<a href="mailto:${esc(SHOP.email)}">${esc(SHOP.email)}</a>`,
+      SHOP.whatsapp ? `<a href="https://wa.me/${esc(SHOP.whatsapp.replace(/\D/g, ""))}" target="_blank" rel="noopener">WhatsApp</a>` : "",
+      `<a href="${href("contact")}">${esc(t("contact_title"))}</a>`,
+    ].join("");
     const opts = Object.keys(LANGS).map((l) => `<option value="${l}"${l === lang ? " selected" : ""}>${esc(LANGS[l])}</option>`).join("");
+    const stripLinks = ["how", "how?s=faq", "size"];
     return `
+    <nav class="strip" aria-label="Info">${t("strip").map((s, i) => `<a class="ulink" href="${href(stripLinks[i])}">0${i + 1} ${esc(s)}</a>`).join("")}</nav>
     <footer class="footer">
       <div class="footer__main">
-        <div class="footer__txt"><p class="footer__h">${esc(SHOP.name)}</p><p>${esc(t("footer_vision"))}</p></div>
+        <div class="footer__txt"><p class="footer__h">${esc(SHOP.name)}</p><p>${esc(t("footer_vision"))}</p>
+          <a class="ulink" href="${href("about")}">${esc(t("our_story"))}</a></div>
         <img class="footer__logo" src="images/logo.png" alt="${esc(SHOP.name)}" width="429" height="320" loading="lazy">
         <div class="footer__txt footer__txt--r"><p class="footer__h">${esc(SHOP.name)}</p><p>${esc(t("footer_community"))}</p></div>
       </div>
-      <div class="footer__bottom">
-        <nav class="footer__links" aria-label="Footer">${links.map(([u, s]) => `<a href="${esc(u)}"${u.startsWith("http") ? ' target="_blank" rel="noopener"' : ""}>${esc(s)}</a>`).join("")}</nav>
-        <div class="footer__meta">
-          <label class="footer__lang"><span class="sr">${esc(t("language"))}</span><select id="lang-select-f">${opts}</select></label>
-          <span>© ${new Date().getFullYear()} ${esc(SHOP.name)}</span>
-        </div>
+      <div class="footer__cols">
+        ${acc(t("f_contact"), contact)}
+        ${acc(t("f_shop"), `<a href="${href("shop")}">${esc(t("f_all_products"))}</a><a href="${href("shop?g=men")}">${esc(t("genders").men)}</a><a href="${href("shop?g=women")}">${esc(t("genders").women)}</a>`)}
+        ${acc(t("f_help"), `<a href="${href("how")}">${esc(t("nav_how"))}</a><a href="${href("how?s=faq")}">FAQ</a><a href="${href("size")}">${esc(t("size_guide"))}</a>`)}
+        ${acc(t("f_follow"), soc.join(""))}
+        ${acc(t("f_legal"), Object.keys(lt).map((k) => `<a href="${href("legal/" + k)}">${esc(lt[k])}</a>`).join(""))}
+        <label class="footer__lang"><span>${esc(t("language"))}</span><select id="lang-select-f">${opts}</select></label>
       </div>
+      <div class="footer__bottom"><span>© ${new Date().getFullYear()} ${esc(SHOP.name)}</span></div>
     </footer>`;
   }
 
@@ -116,16 +124,25 @@
   // ---------- pages ----------
   const pages = {};
 
-  // Home follows the brand mock-up: hero photo under a transparent header →
-  // six-piece "New collection" row → Men / Women halves → black footer.
+  // Home = brand mock-up look (transparent header over the photo, six tiles per row, Men / Women halves,
+  // black brand footer) + the earlier structure: rail arrows, "+ 001" pre-order block, community cards.
+  // Section headings follow the type rule: body + 4px, bold.
+  const railCtl = () => `<div class="rail__ctl">
+      <button type="button" data-rail="-1" aria-label="${esc(t("prev"))}"><svg width="8" height="12" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M7 1L2 6l5 5"/></svg></button>
+      <button type="button" data-rail="1" aria-label="${esc(t("next"))}"><svg width="8" height="12" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M1 1l5 5-5 5"/></svg></button>
+    </div>`;
+
   pages.home = () => {
-    const items = PRODUCTS.slice().sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)).slice(0, 6);
+    const items = PRODUCTS.slice().sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
     const tiles = items.map((p) => `<a class="tile" href="${href("product/" + p.id)}">
         <div class="tile__media">${media(p, 0)}</div>
         <span class="tile__cap"><span>${esc(L(p.name))}</span><span>${esc(price(p))}</span></span></a>`).join("");
     const gTiles = ["men", "women"].map((g) => `<a class="gcat" href="${href("shop?g=" + g)}">
         ${SHOP.genderImages[g] ? `<img src="${esc(SHOP.genderImages[g])}" alt="" loading="lazy">` : `<div class="gcat__ph"></div>`}
         <span class="gcat__label">${esc(t("genders")[g])}</span></a>`).join("");
+    const cardLinks = t("cards").map(([title, page], i) => `<a class="bcard" href="${href(page)}">
+        ${SHOP.communityImages[i] ? `<img src="${esc(SHOP.communityImages[i])}" alt="" loading="lazy">` : `<div class="bcard__ph"></div>`}
+        <span class="bcard__t">${esc(title)}</span><span class="bcard__l">${esc(t("view_more"))}</span></a>`).join("");
 
     return `
     <section class="hero hero--home" ${SHOP.heroImage ? `style="background-image:url('${esc(SHOP.heroImage)}')"` : ""}>
@@ -135,20 +152,38 @@
           <p>${esc(t("hero_sub"))}</p>
         </div>
         <a class="ulink hero__link" href="${href("shop")}">${esc(t("shop_now"))}</a>
+        <a class="ulink hero__link2" href="${href("about")}">${esc(t("discover_more"))}</a>
       </div>
     </section>
 
-    <section class="newc">
-      <div class="newc__head">
-        <a class="ulink" href="${href("shop")}">${esc(t("new_collection"))}</a>
+    <section class="newc rail">
+      <div class="sec-head">
+        <h2 class="h2">${esc(t("new_collection"))}</h2>
         <a class="ulink" href="${href("shop")}">${esc(t("shop_now"))}</a>
+        ${railCtl()}
       </div>
-      <div class="newc__row">${tiles}</div>
+      <div class="newc__row rail__track">${tiles}</div>
     </section>
 
     <section class="gcats">
-      <p class="label gcats__t">${esc(t("category"))}</p>
+      <div class="sec-head">
+        <h2 class="h2">${esc(t("category"))}</h2>
+        <span class="label">${esc(SHOP.season)}</span>
+      </div>
       <div class="gcats__grid">${gTiles}</div>
+    </section>
+
+    <section class="edit" ${SHOP.editorialImage ? `style="background-image:url('${esc(SHOP.editorialImage)}')"` : ""}>
+      <div class="edit__head"><p class="label">${esc(t("how_eyebrow"))}</p><h2 class="h2">${esc(t("how_title"))}</h2></div>
+      <div class="edit__grid">
+        ${t("steps3").map(([h, d], i) => `<div class="edit__item"><p class="label">+ 00${i + 1}</p><h3 class="h3">${esc(h)}</h3><p>${esc(d)}</p></div>`).join("")}
+      </div>
+      <a class="ulink" href="${href("how")}">${esc(t("learn_more"))}</a>
+    </section>
+
+    <section class="cards">
+      <h2 class="h2">${t("community_title")}</h2>
+      <div class="cards__grid">${cardLinks}</div>
     </section>`;
   };
 
@@ -464,6 +499,10 @@
 
     document.getElementById("lang-select").onchange = (e) => switchLang(e.target.value);
     document.getElementById("lang-select-f").onchange = (e) => switchLang(e.target.value);
+    document.querySelectorAll("[data-rail]").forEach((b) => (b.onclick = () => {
+      const track = b.closest(".rail").querySelector(".rail__track");
+      track.scrollBy({ left: Number(b.dataset.rail) * track.clientWidth * 0.8, behavior: "smooth" });
+    }));
     const banner = document.getElementById("lang-banner");
     if (banner) banner.onclick = (e) => {
       const b = e.target.closest("button"); if (!b) return;
