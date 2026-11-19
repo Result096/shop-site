@@ -18,16 +18,14 @@ const SHOP = {
 
   heroImage: "images/hero.jpg", // фото первого экрана
   aboutImage: "",           // большое фото на странице «О бренде»
-  communityImages: [],      // 3 фото для карточек «Наша история / Предзаказ / Контакты»
-  categoryImages: {         // большие фото категорий на главной
-    tops: "", hoodies: "", pants: "", accessories: "",
+  genderImages: {           // две большие картинки «Мужское / Женское» на главной
+    men: "", women: "",     // например "images/men.jpg"
   },
-  editorialImage: "",       // фон тёмного блока «Предзаказ» на главной
-  season: "[Season '26]",   // подпись рядом с «Категории», например "AUTUMN_WINTER '26–'27"
 };
 
 // ============================================================
 //  ТОВАРЫ — ПРИМЕРЫ. Замените на свои.
+//  gender: men | women | unisex (unisex показывается и в «Мужском», и в «Женском»)
 //  category: tops | hoodies | pants | accessories
 //  price: число или null (будет «Цена уточняется»)
 //  images: ["images/xxx-1.jpg", "images/xxx-2.jpg", ...] — первое фото в каталоге, второе при наведении
@@ -47,56 +45,56 @@ const COLORS = {
 
 const PRODUCTS = [
   {
-    id: "tee-essential", category: "tops", price: null, status: "preorder", isNew: true,
+    id: "tee-essential", gender: "unisex", category: "tops", price: null, status: "preorder", isNew: true,
     name: { en: "[Essential T-shirt]", ru: "[Базовая футболка]", fr: "[T-shirt Essential]" },
     colors: ["black", "white", "grey"], sizes: ["XS", "S", "M", "L", "XL"], images: [],
     description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
     composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
   {
-    id: "hoodie-half-zip", category: "hoodies", price: null, status: "preorder", isNew: true,
+    id: "hoodie-half-zip", gender: "unisex", category: "hoodies", price: null, status: "preorder", isNew: true,
     name: { en: "[Half-zip hoodie]", ru: "[Худи на полумолнии]", fr: "[Sweat demi-zip]" },
     colors: ["olive", "black"], sizes: ["XS", "S", "M", "L", "XL"], images: [],
     description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
     composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
   {
-    id: "track-jacket", category: "hoodies", price: null, status: "preorder", isNew: true,
+    id: "track-jacket", gender: "men", category: "hoodies", price: null, status: "preorder", isNew: true,
     name: { en: "[Zip track jacket]", ru: "[Спортивная куртка на молнии]", fr: "[Veste zippée]" },
     colors: ["navy", "black"], sizes: ["S", "M", "L", "XL"], images: [],
     description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
     composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
   {
-    id: "flared-pants", category: "pants", price: null, status: "preorder", isNew: true,
+    id: "flared-pants", gender: "women", category: "pants", price: null, status: "preorder", isNew: true,
     name: { en: "[Flared pants]", ru: "[Брюки-клёш]", fr: "[Pantalon évasé]" },
     colors: ["black"], sizes: ["XS", "S", "M", "L"], images: [],
     description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
     composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
   {
-    id: "shorts", category: "pants", price: null, status: "preorder", isNew: false,
+    id: "shorts", gender: "women", category: "pants", price: null, status: "preorder", isNew: false,
     name: { en: "[Shorts]", ru: "[Шорты]", fr: "[Short]" },
     colors: ["black", "red"], sizes: ["XS", "S", "M", "L", "XL"], images: [],
     description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
     composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
   {
-    id: "denim-jacket", category: "hoodies", price: null, status: "soon", isNew: false,
+    id: "denim-jacket", gender: "men", category: "hoodies", price: null, status: "soon", isNew: false,
     name: { en: "[Denim jacket]", ru: "[Джинсовая куртка]", fr: "[Veste en jean]" },
     colors: ["blue", "black"], sizes: ["S", "M", "L", "XL"], images: [],
     description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
     composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
   {
-    id: "longsleeve", category: "tops", price: null, status: "preorder", isNew: false,
+    id: "longsleeve", gender: "unisex", category: "tops", price: null, status: "preorder", isNew: false,
     name: { en: "[Longsleeve]", ru: "[Лонгслив]", fr: "[T-shirt manches longues]" },
     colors: ["black", "white"], sizes: ["XS", "S", "M", "L", "XL"], images: [],
     description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
     composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
   {
-    id: "socks", category: "accessories", price: null, status: "preorder", isNew: false,
+    id: "socks", gender: "unisex", category: "accessories", price: null, status: "preorder", isNew: false,
     name: { en: "[Socks]", ru: "[Носки]", fr: "[Chaussettes]" },
     colors: ["white", "black"], sizes: ["One size"], images: [],
     description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
