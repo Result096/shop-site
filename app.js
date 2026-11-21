@@ -182,33 +182,35 @@
       if (sort === "high") list.reverse();
     } else list = list.slice().sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
 
+    // Catalogue in the home-page language: 46px caps title + [count], Men/Women tabs,
+    // a thin bar with category links (left) and Colour / Size / Sort (right), 4-up grid of 290×398 tiles.
     const cats = ["all", ...Object.keys(T.en.cats).filter((c) => PRODUCTS.some((p) => p.category === c))];
-    const chip = (c) => `<button class="chip" data-q="cat" data-v="${c}" aria-pressed="${c === cat}">${esc(c === "all" ? t("cat_all") : t("cats")[c])}</button>`;
+    const tab = (q, v, label, on) => `<button class="pl-link" data-q="${q}" data-v="${v}" aria-pressed="${on}">${esc(label)}</button>`;
     const colors = [...new Set(PRODUCTS.flatMap((p) => p.colors))];
     const sizes = [...new Set(PRODUCTS.flatMap((p) => p.sizes))];
-    const sel = (name, label, items, cur, lab) => `<label class="sel">${esc(label)}<select data-q="${name}">
+    const sel = (name, label, items, cur) => `<label class="pl-sel"><span>${esc(label)}</span><select data-q="${name}">
       ${items.map(([v, txt]) => `<option value="${esc(v)}"${v === cur ? " selected" : ""}>${esc(txt)}</option>`).join("")}</select></label>`;
     return `
-    <section class="block page-head">
-      <p class="eyebrow"><a href="${href("")}">${esc(t("crumbs_home"))}</a> / ${esc(t("shop_title"))}</p>
-      <h1 class="h1">${esc(t("shop_title"))}</h1>
-      <p class="muted">${esc(t("shop_sub"))}</p>
-    </section>
-    <section class="block toolbar-wrap">
-      <div class="chips" role="group" aria-label="Category">${cats.map(chip).join("")}</div>
-      <div class="toolbar">
-        <div class="toolbar__l">
-          ${sel("g", t("gender"), [["", t("f_all")], ...Object.entries(t("genders"))], g)}
-          ${sel("color", t("f_colour"), [["", t("f_all")], ...colors.map((c) => [c, colorName(c)])], color)}
-          ${sel("size", t("f_size"), [["", t("f_all")], ...sizes.map((s) => [s, s])], size)}
-        </div>
-        <div class="toolbar__r">
-          <span class="muted">${esc(t("n_products", { n: list.length }))}</span>
-          ${sel("sort", t("sort"), [["new", t("sort_new")], ["low", t("sort_low")], ["high", t("sort_high")]], sort)}
-        </div>
+    <section class="pl-head">
+      <p class="pl-crumbs"><a href="${href("")}">${esc(t("crumbs_home"))}</a> / ${esc(t("nav_collection"))}</p>
+      <div class="pl-title">
+        <h1 class="hhead__t">${esc(g ? t("genders")[g] : t("nav_collection"))}</h1>
+        <span class="pl-count">[${esc(t("n_products", { n: list.length }))}]</span>
       </div>
+      <nav class="pl-tabs" aria-label="${esc(t("gender"))}">
+        ${tab("g", "all", t("f_all"), !g)}${Object.entries(t("genders")).map(([k, v]) => tab("g", k, v, g === k)).join("")}
+      </nav>
+      <p class="pl-sub">${esc(t("shop_sub"))}</p>
     </section>
-    <section class="grid grid--edge">${list.length ? list.map(card).join("") : `<p class="block muted">${esc(t("empty"))}</p>`}</section>`;
+    <div class="pl-bar">
+      <div class="pl-cats" role="group" aria-label="Category">${cats.map((c) => tab("cat", c, c === "all" ? t("cat_all") : t("cats")[c], c === cat)).join("")}</div>
+      <div class="pl-filters">
+        ${sel("color", t("f_colour"), [["", t("f_all")], ...colors.map((c) => [c, colorName(c)])], color)}
+        ${sel("size", t("f_size"), [["", t("f_all")], ...sizes.map((s) => [s, s])], size)}
+        ${sel("sort", t("sort"), [["new", t("sort_new")], ["low", t("sort_low")], ["high", t("sort_high")]], sort)}
+      </div>
+    </div>
+    <section class="pl-grid">${list.length ? list.map(card).join("") : `<p class="pl-empty">${esc(t("empty"))}</p>`}</section>`;
   };
 
   pages.product = ([id]) => {
