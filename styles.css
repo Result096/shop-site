@@ -288,8 +288,8 @@ main { min-height: 60vh; }
 /* phones / tablets: text → photo → text → photo → text (each row = [photo,] text).
    desktop: the earlier two-column layout — row 2 photo left / text right, row 3 text left / photo right */
 @media (min-width: 900px) {
-  .ab-row { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; max-width: var(--max); margin: 0 auto; padding: 56px var(--side); }
-  .ab-row .ab-block { padding: 0; }
+  .ab-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 64px; align-items: center; max-width: var(--max); margin: 0 auto; padding: 56px var(--side); }
+  .ab-row .ab-block { padding: 0; max-width: none; }
   .ab-row:first-of-type { display: block; padding-top: 0; padding-bottom: 0; }
   .ab-row:first-of-type .ab-block { padding: 56px 0; }
   .ab-row .ab-photo { margin: 0; height: auto; aspect-ratio: 4 / 5; }
