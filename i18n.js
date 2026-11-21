@@ -61,6 +61,9 @@ const T = {
 
     colour: "Colour", size: "Size", select_size: "select", size_guide: "Size guide",
     preorder_btn: "Pre-order",
+    nav_bag: "Bag", add_to_bag: "Add to bag", added_to_bag: "Added to bag", view_bag: "View bag",
+    bag_title: "Bag", bag_empty: "Your bag is empty.", remove: "Remove", total: "Total",
+    bag_form_title: "Pre-order details", bag_form_sub: "No payment now. Leave your details and we'll email you as soon as your pieces are ready to ship.",
     preorder_note: "No payment now. We'll email you as soon as this piece is ready to ship. Worldwide shipping.",
     d_description: "Description", d_composition: "Composition & care", d_shipping: "Shipping & pre-order",
     shipping_text: "[Estimated timing, worldwide shipping details]",

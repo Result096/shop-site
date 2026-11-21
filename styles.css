@@ -222,6 +222,26 @@ main { min-height: 60vh; }
 .pl-grid .card__name { font-size: 13px; font-weight: 500; }
 .pl-empty { grid-column: 1 / -1; margin: 0; color: var(--muted); }
 
+/* ---------- bag ---------- */
+.bag-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; border-bottom: 1px solid var(--line); margin: 0 var(--side); padding: max(40px, calc(96 * var(--u))) 0 20px; }
+.bag-head .hhead__t { color: #373737; }
+.bag-empty { padding: 48px var(--side) max(96px, calc(180 * var(--u))); display: grid; gap: 20px; justify-items: start; }
+.bag-empty p { margin: 0; color: var(--muted); }
+.bag { display: grid; gap: 48px; padding: 32px var(--side) max(72px, calc(180 * var(--u))); }
+@media (min-width: 900px) { .bag { grid-template-columns: minmax(0, 1.3fr) minmax(320px, 1fr); gap: calc(80 * var(--u) + 24px); align-items: start; } .bag-form { position: sticky; top: 96px; } }
+.bag-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 24px; }
+.bag-item { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 20px; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+@media (min-width: 900px) { .bag-item { grid-template-columns: 160px minmax(0, 1fr); } }
+.bag-item__img { aspect-ratio: 290 / 398; background: #d9d9d9; position: relative; overflow: hidden; }
+.bag-item__img > * { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.bag-item__img .ph { background: #d9d9d9; color: #8a8a8a; font-size: 9px; padding: 6px; }
+.bag-item__info { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; font-size: 13px; }
+.bag-item__info .card__name { text-transform: uppercase; font-weight: 500; }
+.bag-item__qty { display: flex; align-items: center; gap: 8px; text-transform: uppercase; color: var(--muted); font-size: 12px; }
+.bag-item__qty select { border: 0; border-bottom: 1px solid var(--black); background: transparent; min-height: 32px; font-size: 13px; color: var(--black); cursor: pointer; }
+.bag-item__rm { background: none; border: 0; padding: 0; cursor: pointer; color: inherit; }
+.added { margin: -10px 0 0; font-size: 13px; }
+
 /* ---------- numbered info strip ---------- */
 .strip { display: flex; flex-wrap: wrap; gap: 12px 40px; padding: 22px var(--side); border-top: 1px solid var(--line); background: var(--white); }
 .strip .ulink { font-size: 12px; }

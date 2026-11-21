@@ -20,6 +20,17 @@
   const price = (p) => SHOP.currency + (p.price == null ? "000" : p.price.toLocaleString("en-US"));
   const colorName = (c) => (COLORS[c] ? COLORS[c][lang] || COLORS[c].en : c);
   const byId = (id) => PRODUCTS.find((p) => p.id === id);
+  // Bag (pre-order basket) lives in localStorage: [{ id, color, size, qty }]
+  const BAG_KEY = "mkg-bag";
+  const bagGet = () => { try { return (JSON.parse(store.get(BAG_KEY) || "[]") || []).filter((i) => byId(i.id)); } catch { return []; } };
+  const bagSet = (items) => { store.set(BAG_KEY, JSON.stringify(items)); document.querySelectorAll("[data-bag-count]").forEach((e) => (e.textContent = bagCount(items))); };
+  const bagCount = (items = bagGet()) => items.reduce((n, i) => n + i.qty, 0);
+  function bagAdd(id, color, size) {
+    const items = bagGet();
+    const same = items.find((i) => i.id === id && i.color === color && i.size === size);
+    if (same) same.qty = Math.min(same.qty + 1, 9); else items.push({ id, color, size, qty: 1 });
+    bagSet(items);
+  }
 
   function media(p, i = 0, cls = "") {
     const src = p.images && p.images[i];
@@ -68,6 +79,7 @@
           ${logo}
           <div class="header__r">
             <a class="hlink hlink--d" href="${href("contact")}"${active === "contact" ? ' aria-current="page"' : ""}>${esc(t("nav_contact"))}</a>
+            <a class="hlink" href="${href("bag")}"${active === "bag" ? ' aria-current="page"' : ""}>${esc(t("nav_bag"))} (<span data-bag-count>${bagCount()}</span>)</a>
           </div>
         </header>
         <nav class="drawer" id="drawer" hidden>${nav}</nav>
@@ -210,7 +222,8 @@
           <p class="err" id="size-err" hidden>${esc(t("pick_size_first"))}</p>
         </div>
 
-        <button class="btn btn--full" id="open-preorder" ${canOrder ? "" : "disabled"}>${esc(canOrder ? t("preorder_btn") : t("badge_soon"))}</button>
+        <button class="btn btn--full" id="add-to-bag" ${canOrder ? "" : "disabled"}>${esc(canOrder ? t("add_to_bag") : t("badge_soon"))}</button>
+        <p class="added" id="added" hidden>${esc(t("added_to_bag"))} — <a class="ulink" href="${href("bag")}">${esc(t("view_bag"))}</a></p>
         <p class="note">${esc(t("preorder_note"))}</p>
 
         <div class="acc-group">
@@ -223,8 +236,7 @@
     <section class="block">
       <h2 class="h2">${esc(t("also_like"))}</h2>
     </section>
-    <section class="grid grid--edge">${more.map(card).join("")}</section>
-    ${preorderDialog(p)}`;
+    <section class="grid grid--edge">${more.map(card).join("")}</section>`;
   };
 
   const COUNTRY_CODES = "AF AX AL DZ AD AO AI AG AR AM AW AU AT AZ BS BH BD BB BY BE BZ BJ BM BT BO BA BW BR BN BG BF BI CV KH CM CA KY CF TD CL CN CO KM CG CD CR CI HR CU CW CY CZ DK DJ DM DO EC EG SV GQ ER EE SZ ET FO FJ FI FR GF PF GA GM GE DE GH GI GR GL GD GP GU GT GG GN GW GY HT HN HK HU IS IN ID IR IQ IE IM IL IT JM JP JE JO KZ KE KI KW KG LA LV LB LS LR LY LI LT LU MO MG MW MY MV ML MT MH MQ MR MU YT MX FM MD MC MN ME MS MA MZ MM NA NR NP NL NC NZ NI NE NG MK NO OM PK PW PS PA PG PY PE PH PL PT PR QA RE RO RU RW BL KN LC MF PM VC WS SM ST SA SN RS SC SL SG SX SK SI SB SO ZA KR SS ES LK SD SR SE CH SY TW TJ TZ TH TL TG TO TT TN TR TM TC TV UG UA AE GB US UY UZ VU VA VE VN VG VI WF EH YE ZM ZW".split(" ");
@@ -238,17 +250,28 @@
   const opt = (label) => `${esc(label)} <span class="muted">(${esc(t("optional"))})</span>`;
   const consent = () => `<label class="check"><input type="checkbox" name="consent" value="yes" required><span>${t("consent", { privacy: `<a href="${href("legal/privacy")}" target="_blank">${esc(t("privacy_link"))}</a>` })} *</span></label>`;
 
-  function preorderDialog(p) {
-    return `<dialog class="modal" id="po-modal" aria-labelledby="po-title">
-      <form class="modal__body" id="po-form" novalidate>
-        <button type="button" class="modal__close" data-close aria-label="${esc(t("close"))}"><svg width="14" height="14" viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13"/></svg></button>
-        <div><h2 id="po-title" class="h3">${esc(t("po_title"))}</h2><p class="muted small">${esc(t("po_sub"))}</p></div>
-        <div class="po-item"><div class="po-item__img">${media(p, 0)}</div><div><strong>${esc(L(p.name))}</strong><br><span class="muted">${esc(price(p))}</span></div></div>
-        <div class="fields fields--3">
-          <label class="field">${esc(t("colour"))}<select name="colour" id="po-colour">${p.colors.map((c) => `<option value="${c}">${esc(colorName(c))}</option>`).join("")}</select></label>
-          <label class="field">${esc(t("size"))}<select name="size" id="po-size">${p.sizes.map((s) => `<option>${esc(s)}</option>`).join("")}</select></label>
-          <label class="field">${esc(t("quantity"))}<select name="quantity">${[1, 2, 3, 4, 5].map((n) => `<option>${n}</option>`).join("")}</select></label>
-        </div>
+  // Bag page: items on the left (photo, name, colour / size, qty, price, remove), pre-order form on the right
+  pages.bag = () => {
+    const items = bagGet();
+    const head = `<section class="pl-head bag-head"><h1 class="hhead__t">${esc(t("bag_title"))}</h1><span class="pl-count">[${bagCount(items)}]</span></section>`;
+    if (!items.length) return head + `<section class="bag-empty"><p>${esc(t("bag_empty"))}</p><a class="hhead__a" href="${href("shop")}">${esc(t("shop_now"))}</a></section>`;
+    const rows = items.map((it, n) => {
+      const p = byId(it.id);
+      return `<li class="bag-item">
+        <a class="bag-item__img" href="${href("product/" + p.id)}">${media(p, 0)}</a>
+        <div class="bag-item__info">
+          <a class="card__name" href="${href("product/" + p.id)}">${esc(L(p.name))}</a>
+          <span class="muted">${esc(colorName(it.color))} / ${esc(it.size)}</span>
+          <label class="bag-item__qty">${esc(t("quantity"))}<select data-qty="${n}">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map((q) => `<option${q === it.qty ? " selected" : ""}>${q}</option>`).join("")}</select></label>
+          <span class="card__price">${esc(price(p))}</span>
+          <button type="button" class="card__btn bag-item__rm" data-remove="${n}">${esc(t("remove"))}</button>
+        </div></li>`;
+    }).join("");
+    return head + `
+    <section class="bag">
+      <ul class="bag-list" id="bag-list">${rows}</ul>
+      <form class="bag-form form" id="bag-form" novalidate>
+        <div><h2 class="h3">${esc(t("bag_form_title"))}</h2><p class="muted small">${esc(t("bag_form_sub"))}</p></div>
         <div class="fields">
           <label class="field">${req(t("full_name"))}<input name="name" required autocomplete="name"></label>
           <label class="field">${req(t("email"))}<input name="email" type="email" required autocomplete="email"></label>
@@ -263,9 +286,8 @@
         <button type="submit" class="btn btn--full">${esc(t("send_preorder"))}</button>
         <p class="status" role="status"></p>
       </form>
-    </dialog>`;
-  }
-
+    </section>`;
+  };
   pages.thanks = () => {
     let o = null;
     try { o = JSON.parse(sessionStorage.getItem("mkg-last-order") || "null"); } catch {}
@@ -276,7 +298,7 @@
       <h1 class="h1">${t("thanks_title", { name: esc(o.name) })}</h1>
       <p class="lead-s">${t("thanks_text", { email: `<strong>${esc(o.email)}</strong>` })}</p>
       <div class="summary"><p class="eyebrow">${esc(t("your_preorder"))}</p>
-        ${row(o.product, o.price)}${row(t("colour_size"), o.colour + " / " + o.size + (o.quantity > 1 ? " × " + o.quantity : ""))}
+        ${(o.items || [{ product: o.product, colour: o.colour, size: o.size, qty: o.quantity || 1, price: o.price }]).map((l) => row(l.product + (l.qty > 1 ? " × " + l.qty : ""), l.colour + " / " + l.size + " · " + l.price)).join("")}
         ${row(t("ship_to"), o.city + ", " + o.country)}${row(t("po_number"), "#" + o.ref)}</div>
       <a class="btn" href="${href("shop")}">${esc(t("continue"))}</a>
       <p>${esc(t("welcome"))}${SHOP.instagram ? ` <a class="ulink" href="https://instagram.com/${esc(SHOP.instagram)}" target="_blank" rel="noopener">Instagram</a>` : ""}</p>
@@ -407,7 +429,7 @@
     const fn = pages[page] || pages.notfound;
 
     document.documentElement.lang = lang;
-    const titles = { shop: "nav_collection", about: "nav_about", how: "nav_how", contact: "nav_contact", size: "size_guide" };
+    const titles = { bag: "nav_bag", shop: "nav_collection", about: "nav_about", how: "nav_how", contact: "nav_contact", size: "size_guide" };
     document.title = (titles[page] ? t(titles[page]) + " — " : "") + SHOP.name;
 
     app.innerHTML = header(page, fn === pages.home ? "home" : fn === pages.how ? "over" : "") +`<main id="main">${fn(args, q)}</main>` + footer();
@@ -458,6 +480,7 @@
     });
 
     if (page === "product") bindProduct();
+    if (page === "bag") bindBag();
     if (page === "contact") {
       const f = document.getElementById("contact-form");
       f.onsubmit = async (e) => {
@@ -489,37 +512,45 @@
       document.getElementById("size-err").hidden = true;
     }));
 
-    const modal = document.getElementById("po-modal");
-    const form = document.getElementById("po-form");
-    document.getElementById("open-preorder").onclick = () => {
+    // Add to bag: needs a size; shows "Added to bag — View bag" under the button
+    const added = document.getElementById("added");
+    document.getElementById("add-to-bag").onclick = () => {
       if (!size) { document.getElementById("size-err").hidden = false; return; }
-      form.querySelector("#po-colour").value = color;
-      form.querySelector("#po-size").value = size;
-      modal.showModal();
-    };
-    modal.querySelector("[data-close]").onclick = () => modal.close();
-    modal.addEventListener("click", (e) => { if (e.target === modal) modal.close(); });
-
-    form.onsubmit = async (e) => {
-      e.preventDefault();
-      const ref = "MKG-" + Date.now().toString(36).toUpperCase().slice(-6);
-      const colourName = colorName(form.colour.value);
-      const ok = await sendForm(form, {
-        product: L(p.name) + " (" + p.id + ")", price: price(p), colour_name: colourName,
-        preorder_number: ref, language: lang, _subject: "Pre-order " + ref + ": " + L(p.name),
-      });
-      if (!ok) return;
-      try {
-        sessionStorage.setItem("mkg-last-order", JSON.stringify({
-          ref, name: form.name.value, email: form.email.value, product: L(p.name), price: price(p),
-          colour: colourName, size: form.size.value, quantity: +form.quantity.value, city: form.city.value, country: form.country.value,
-        }));
-      } catch {}
-      modal.close();
-      location.hash = href("thanks");
+      bagAdd(p.id, color, size);
+      added.hidden = false;
     };
   }
 
+  // Bag page: change quantity / remove, then send one pre-order for everything in the bag
+  function bindBag() {
+    const list = document.getElementById("bag-list");
+    if (!list) return;
+    list.addEventListener("change", (e) => {
+      const s = e.target.closest("[data-qty]"); if (!s) return;
+      const items = bagGet(); items[+s.dataset.qty].qty = +s.value; bagSet(items); render();
+    });
+    list.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-remove]"); if (!b) return;
+      const items = bagGet(); items.splice(+b.dataset.remove, 1); bagSet(items); render();
+    });
+    const form = document.getElementById("bag-form");
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const items = bagGet();
+      const ref = "MKG-" + Date.now().toString(36).toUpperCase().slice(-6);
+      const lines = items.map((i) => ({ product: L(byId(i.id).name), colour: colorName(i.color), size: i.size, qty: i.qty, price: price(byId(i.id)) }));
+      const ok = await sendForm(form, {
+        items: lines.map((l) => `${l.product} — ${l.colour} / ${l.size} × ${l.qty} (${l.price})`).join("\n"),
+        preorder_number: ref, _subject: "Pre-order " + ref + " (" + bagCount(items) + " pcs)",
+      });
+      if (!ok) return;
+      try {
+        sessionStorage.setItem("mkg-last-order", JSON.stringify({ ref, name: form.name.value, email: form.email.value, items: lines, city: form.city.value, country: form.country.value }));
+      } catch {}
+      bagSet([]);
+      location.hash = href("thanks");
+    };
+  }
 
   window.addEventListener("hashchange", render);
   render();
