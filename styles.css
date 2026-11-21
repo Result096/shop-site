@@ -248,7 +248,7 @@ main { min-height: 60vh; }
 .card__info { padding-top: 18px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
 .card__price { font-size: 13px; font-weight: 700; }
 /* short description: max 2 lines */
-.card__desc { margin: 0; font-size: 13px; line-height: 1.35; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.card__desc { margin: -8px 0 0; /* sits closer to the name: 6px instead of 14px */ font-size: 13px; line-height: 1.35; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 /* Pre-order: underlined caps link at the very bottom, left-aligned (same style as "Shop now") */
 /* colours → price → Pre-order: same 14px gaps, kept together at the bottom of the card */
 .card .swatches { margin-top: auto; }
