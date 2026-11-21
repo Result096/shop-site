@@ -3,8 +3,6 @@
 
   // ---------- helpers ----------
   const app = document.getElementById("app");
-  const LS_KEY = "mkg-lang";
-  const LS_COUNTRY = "mkg-country";
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const store = {
     get(k) { try { return localStorage.getItem(k); } catch { return null; } },
@@ -21,9 +19,6 @@
   const price = (p) => (p.price == null ? t("price_tba") : p.price.toLocaleString(lang) + " " + SHOP.currency);
   const colorName = (c) => (COLORS[c] ? COLORS[c][lang] || COLORS[c].en : c);
   const byId = (id) => PRODUCTS.find((p) => p.id === id);
-  // Country / region the visitor picked (default: International, English)
-  const country = () => COUNTRIES.find((c) => c.code === store.get(LS_COUNTRY)) || COUNTRIES[0];
-  const locLabel = () => { const c = country(); return (c.code === "INT" ? "" : c.code + " / ") + lang.toUpperCase(); };
 
   function media(p, i = 0, cls = "") {
     const src = p.images && p.images[i];
@@ -69,7 +64,6 @@
           ${logo}
           <div class="header__r">
             <a class="hlink hlink--d" href="${href("contact")}"${active === "contact" ? ' aria-current="page"' : ""}>${esc(t("nav_contact"))}</a>
-            <button class="hlink" data-loc aria-haspopup="dialog">${esc(locLabel())}</button>
           </div>
         </header>
         <nav class="drawer" id="drawer" hidden>${nav}</nav>
@@ -106,27 +100,11 @@
         ${acc(t("f_help"), `<a href="${href("how")}">${esc(t("nav_how"))}</a><a href="${href("how?s=faq")}">FAQ</a><a href="${href("size")}">${esc(t("size_guide"))}</a>`)}
         ${acc(t("f_follow"), soc.join(""))}
         ${acc(t("f_legal"), Object.keys(lt).map((k) => `<a href="${href("legal/" + k)}">${esc(lt[k])}</a>`).join(""))}
-        <button class="footer__loc" data-loc aria-haspopup="dialog"><b>${esc(t("loc_label"))}</b> ${esc(L(country().name))} — ${esc(LANGS[lang])}</button>
       </div>
       <div class="footer__bottom"><span>© ${new Date().getFullYear()} ${esc(SHOP.name)}</span></div>
     </footer>`;
   }
 
-  // "Country / region" panel (slides in from the right): countries grouped by region,
-  // each with the languages available there. Picking one stores the country and switches the language.
-  function locModal() {
-    const cur = country();
-    const rows = (r) => COUNTRIES.filter((c) => c.region === r).map((c) => `<li class="loc__row${c === cur ? " is-on" : ""}">
-        <span class="loc__name">${esc(L(c.name))}</span>
-        <span class="loc__langs">${c.langs.map((l) => `<button type="button" data-country="${c.code}" data-lang="${l}" aria-pressed="${c === cur && l === lang}">${esc(LANGS[l])}</button>`).join("")}</span></li>`).join("");
-    const regions = Object.keys(t("regions")).filter((r) => COUNTRIES.some((c) => c.region === r));
-    return `<dialog class="modal loc" id="loc-modal" aria-labelledby="loc-title">
-      <div class="modal__body">
-        <button type="button" class="modal__close" data-close aria-label="${esc(t("close"))}"><svg width="14" height="14" viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13"/></svg></button>
-        <div><h2 class="loc__t" id="loc-title">${esc(t("loc_title"))}</h2><p class="loc__sub">${esc(t("loc_sub"))}</p></div>
-        ${regions.map((r) => `<section class="loc__group"><p class="loc__region">${esc(t("regions")[r])}</p><ul>${rows(r)}</ul></section>`).join("")}
-      </div></dialog>`;
-  }
 
   // ---------- pages ----------
   const pages = {};
@@ -426,18 +404,17 @@
   </section>`;
 
   // ---------- router ----------
-  // The site opens in English; other languages only via the "Country / region" panel (remembered).
-  function detectLang() {
-    const saved = store.get(LS_KEY);
-    return saved && LANGS[saved] ? saved : "en";
-  }
+  // English only for now. RU / FR texts stay in i18n.js: add their codes to ACTIVE_LANGS to bring them back.
+  const ACTIVE_LANGS = ["en"];
+  const detectLang = () => "en";
 
   function render() {
     const raw = location.hash.replace(/^#\/?/, "");
     const [pathPart, qs] = raw.split("?");
     const parts = pathPart.split("/").filter(Boolean);
-    if (!parts.length || !LANGS[parts[0]]) {
-      location.replace("#/" + detectLang() + (parts.length ? "/" + parts.join("/") : ""));
+    if (!parts.length || !ACTIVE_LANGS.includes(parts[0])) {
+      if (parts.length && LANGS[parts[0]]) parts.shift(); // old #/ru/... or #/fr/... links → English
+      location.replace("#/" + detectLang() + (parts.length ? "/" + parts.join("/") : "") + (qs ? "?" + qs : ""));
       return;
     }
     lang = parts[0];
@@ -450,7 +427,7 @@
     const titles = { shop: "nav_collection", about: "nav_about", how: "nav_how", contact: "nav_contact", size: "size_guide" };
     document.title = (titles[page] ? t(titles[page]) + " — " : "") + SHOP.name;
 
-    app.innerHTML = header(page, fn === pages.home ? "home" : fn === pages.how ? "over" : "") +`<main id="main">${fn(args, q)}</main>` + footer() + locModal();
+    app.innerHTML = header(page, fn === pages.home ? "home" : fn === pages.how ? "over" : "") +`<main id="main">${fn(args, q)}</main>` + footer();
     const target = q.get("s") && document.getElementById(q.get("s"));
     if (target) target.scrollIntoView(); else window.scrollTo(0, 0);
     bind(page, q);
@@ -491,16 +468,6 @@
     const menuBtn = document.getElementById("menu-btn");
     menuBtn.onclick = () => { drawer.hidden = !drawer.hidden; menuBtn.setAttribute("aria-expanded", String(!drawer.hidden)); };
 
-    const loc = document.getElementById("loc-modal");
-    document.querySelectorAll("[data-loc]").forEach((b) => (b.onclick = () => loc.showModal()));
-    loc.querySelector("[data-close]").onclick = () => loc.close();
-    loc.addEventListener("click", (e) => {
-      if (e.target === loc) return loc.close();
-      const b = e.target.closest("[data-country]"); if (!b) return;
-      store.set(LS_COUNTRY, b.dataset.country);
-      loc.close();
-      if (b.dataset.lang === lang) render(); else switchLang(b.dataset.lang);
-    });
 
     document.querySelectorAll("[data-q]").forEach((el) => {
       if (el.tagName === "SELECT") el.onchange = () => setQuery(el.dataset.q, el.value);
@@ -570,10 +537,6 @@
     };
   }
 
-  function switchLang(l) {
-    store.set(LS_KEY, l);
-    location.hash = location.hash.replace(/^#\/[a-z]{2}/, "#/" + l);
-  }
 
   window.addEventListener("hashchange", render);
   render();

@@ -26,37 +26,6 @@ const SHOP = {
 };
 
 // ============================================================
-//  СТРАНЫ И ЯЗЫКИ (окно «Страна / регион»)
-//  region: intl | europe | cis | mideast | americas
-//  langs: языки, доступные для страны (первый — основной). Есть: en, ru, fr
-//  Сайт по умолчанию открывается на английском (страна INT).
-// ============================================================
-
-const COUNTRIES = [
-  { code: "INT", region: "intl", langs: ["en"], name: { en: "International", ru: "Другие страны", fr: "International" } },
-
-  { code: "MC", region: "europe", langs: ["fr", "en"], name: { en: "Monaco", ru: "Монако", fr: "Monaco" } },
-  { code: "FR", region: "europe", langs: ["fr", "en"], name: { en: "France", ru: "Франция", fr: "France" } },
-  { code: "BE", region: "europe", langs: ["fr", "en"], name: { en: "Belgium", ru: "Бельгия", fr: "Belgique" } },
-  { code: "CH", region: "europe", langs: ["fr", "en"], name: { en: "Switzerland", ru: "Швейцария", fr: "Suisse" } },
-  { code: "GB", region: "europe", langs: ["en"], name: { en: "United Kingdom", ru: "Великобритания", fr: "Royaume-Uni" } },
-  { code: "DE", region: "europe", langs: ["en"], name: { en: "Germany", ru: "Германия", fr: "Allemagne" } },
-  { code: "IT", region: "europe", langs: ["en"], name: { en: "Italy", ru: "Италия", fr: "Italie" } },
-  { code: "ES", region: "europe", langs: ["en"], name: { en: "Spain", ru: "Испания", fr: "Espagne" } },
-
-  { code: "KG", region: "cis", langs: ["ru", "en"], name: { en: "Kyrgyzstan", ru: "Кыргызстан", fr: "Kirghizistan" } },
-  { code: "KZ", region: "cis", langs: ["ru", "en"], name: { en: "Kazakhstan", ru: "Казахстан", fr: "Kazakhstan" } },
-  { code: "UZ", region: "cis", langs: ["ru", "en"], name: { en: "Uzbekistan", ru: "Узбекистан", fr: "Ouzbékistan" } },
-  { code: "RU", region: "cis", langs: ["ru", "en"], name: { en: "Russia", ru: "Россия", fr: "Russie" } },
-
-  { code: "AE", region: "mideast", langs: ["en", "ru"], name: { en: "United Arab Emirates", ru: "ОАЭ", fr: "Émirats arabes unis" } },
-  { code: "TR", region: "mideast", langs: ["en", "ru"], name: { en: "Turkey", ru: "Турция", fr: "Turquie" } },
-
-  { code: "US", region: "americas", langs: ["en"], name: { en: "United States", ru: "США", fr: "États-Unis" } },
-  { code: "CA", region: "americas", langs: ["en", "fr"], name: { en: "Canada", ru: "Канада", fr: "Canada" } },
-];
-
-// ============================================================
 //  ТОВАРЫ — ПРИМЕРЫ. Замените на свои.
 //  gender: men | women | unisex (unisex показывается и в «Мужском», и в «Женском»)
 //  category: tops | hoodies | pants | accessories
