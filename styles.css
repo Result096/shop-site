@@ -130,9 +130,10 @@ main { min-height: 60vh; }
   .hh__shop { position: absolute; left: 50%; transform: translateX(-50%); top: calc(599 * var(--u)); }
 }@media (max-width: 899px) {
   /* phones: logo stays centred, texts stack at the bottom over a soft shade */
-  .hh { height: max(600px, calc(100svh - 42px)); display: flex; flex-direction: column; justify-content: flex-end; padding: 0 20px 66px; background-position: 69% 0; }
+  /* padding-top = space taken by MENU / BAG, so the logo centres between the navigation and the texts */
+  .hh { height: max(600px, calc(100svh - 42px)); display: flex; flex-direction: column; justify-content: flex-end; padding: 52px 20px 66px; background-position: 69% 0; }
   .hh > *:not(.hh__logo), .hh__l > * { position: relative; z-index: 1; }
-  .hh__logo { top: 47.3%; width: 172px; transform: translate(-50%, -50%); }
+  .hh__logo { position: relative; left: auto; top: auto; transform: none; width: 172px; flex: none; align-self: center; margin: auto 0; }
   .hh__l { display: contents; }
   .hh__l .hh__t { order: 1; font-size: 20px; }
   .hh__r { order: 2; margin-top: 4px; font-size: 20px; }
