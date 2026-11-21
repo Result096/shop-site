@@ -142,8 +142,15 @@ main { min-height: 60vh; }
 
 /* shared section head: 46px bold caps title + underlined "Shop now" on the right */
 .hhead { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 0 var(--side); }
-@media (max-width: 899px) {
+/* phones: link / season note always under the title */
+@media (max-width: 599px) {
   .hhead { flex-direction: column; align-items: flex-start; gap: 12px; }
+}
+/* tablets: link / note stay on the right while they fit on the line, otherwise wrap under the title */
+@media (min-width: 600px) and (max-width: 899px) {
+  .hhead { flex-wrap: wrap; align-items: baseline; gap: 12px 24px; }
+}
+@media (max-width: 899px) {
   .hhead__note { text-align: left; white-space: nowrap; font-size: 14px; }
 }
 .hhead__t { margin: 0; font-size: clamp(18px, calc(20 * var(--u)), 20px); font-weight: 700; line-height: 1.1; text-transform: uppercase; }
