@@ -104,11 +104,14 @@
     return `
     <nav class="strip" aria-label="Info">${t("strip").map((s, i) => `<a class="ulink" href="${href(stripLinks[i])}">0${i + 1} ${esc(s)}</a>`).join("")}</nav>
     <footer class="footer">
-      <div class="footer__main">
-        <div class="footer__txt"><p class="footer__h">${esc(SHOP.name)}</p><p>${esc(t("footer_vision"))}</p>
-          <a class="ulink" href="${href("about")}">${esc(t("our_story"))}</a></div>
-        <img class="footer__logo" src="images/logo.png" alt="${esc(SHOP.name)}" width="429" height="320" loading="lazy">
-        <div class="footer__txt footer__txt--r"><p class="footer__h">${esc(SHOP.name)}</p><p>${esc(t("footer_community"))}</p></div>
+      <!-- Figma frame "Footer" (3:5): title + tag, three text columns, motto under column 2, star logo on the right -->
+      <div class="ft">
+        <div class="ft__head"><p class="ft__h">${esc(SHOP.name)}</p><p class="ft__tag">${esc(t("brand_tag"))}</p></div>
+        <p class="ft__c1">${esc(t("brand_left")[0])}</p>
+        <p class="ft__c2">${esc(t("brand_left")[1])}</p>
+        <div class="ft__c3"><p>${esc(t("brand_right")[0])}</p><p class="ft__b">${esc(t("brand_right")[1])}</p></div>
+        <p class="ft__tag ft__motto">${esc(t("brand_motto"))}</p>
+        <img class="ft__logo" src="images/logo-star.png" alt="${esc(SHOP.name)}" width="900" height="854" loading="lazy">
       </div>
       <div class="footer__cols">
         ${acc(t("f_contact"), contact)}
@@ -126,7 +129,7 @@
   const pages = {};
 
   // Home = Figma "Frame 351 + 352" (1920 artboard): hero with centred logo → New collection (6 tiles) →
-  // Category (Men / Women) → black brand block with the star logo → closing photo. Footer is shared.
+  // Category (Men / Women) → closing photo. The brand texts + star logo live in the shared footer (Figma "Footer").
   const bg = (src) => (src ? ` style="background-image:url('${esc(src)}')"` : "");
   pages.home = () => {
     const items = PRODUCTS.slice().sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)).slice(0, 6);
@@ -136,7 +139,6 @@
     const cats = ["men", "women"].map((g) => `<a class="hc__tile hc__tile--${g}" href="${href("shop?g=" + g)}">
         ${SHOP.genderImages[g] ? `<img src="${esc(SHOP.genderImages[g])}" alt="" loading="lazy">` : ""}
         <span class="hc__label"><b>${esc(t("genders")[g])}</b><span>${esc(t("season_label"))}</span></span></a>`).join("");
-    const paras = (arr) => arr.map((s) => `<p>${esc(s)}</p>`).join("");
 
     return `
     <section class="hh"${bg(SHOP.heroImage)}>
@@ -154,18 +156,6 @@
     <section class="hc">
       <div class="hhead"><h2 class="hhead__t">${esc(t("category"))}</h2><a class="hhead__a hhead__a--s" href="${href("shop")}">${esc(t("shop_now"))}</a></div>
       <div class="hc__grid">${cats}</div>
-    </section>
-
-    <section class="hb">
-      <img class="hb__logo" src="images/logo-star.png" alt="" width="900" height="854" loading="lazy">
-      <div class="hb__l">
-        <p class="hb__h">${esc(SHOP.name)}</p><p class="hb__tag">${esc(t("brand_tag"))}</p>
-        <div class="hb__p">${paras(t("brand_left"))}</div>
-      </div>
-      <div class="hb__r">
-        <div class="hb__p">${paras(t("brand_right"))}</div>
-        <p class="hb__tag">${esc(t("brand_motto"))}</p>
-      </div>
     </section>
 
     <section class="hp"${bg(SHOP.closingImage)} role="img" aria-label="${esc(SHOP.name)}"></section>`;
