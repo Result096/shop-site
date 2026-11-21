@@ -137,7 +137,9 @@ main { min-height: 60vh; }
   .hh__l { display: contents; }
   .hh__l .hh__t { order: 1; font-size: 20px; }
   .hh__r { order: 2; margin-top: 4px; font-size: 20px; }
-  .hh__p { order: 3; margin: 20px 0 0; font-size: 16px; max-width: 307px; }
+  /* phones: text uses the full width; tablets: full width minus one (of 12) column on the right */
+  .hh__p { order: 3; margin: 20px 0 0; font-size: 16px; max-width: none; }
+  @media (min-width: 600px) { .hh__p { max-width: calc(100% * 11 / 12); } }
   .hh__shop { order: 4; align-self: flex-start; margin-top: 30px; font-size: 16px; }
 }
 
@@ -365,7 +367,9 @@ main { min-height: 60vh; }
   .pdp__gallery::-webkit-scrollbar { display: none; }
   .pdp__gallery > * { flex: 0 0 82%; scroll-snap-align: start; }
 }
-@media (min-width: 600px) and (max-width: 1199px) { .pdp__gallery > * { flex-basis: 42%; } }
+/* two photos in view; the next one shows only a ~16px sliver so it is clear the row scrolls */
+@media (min-width: 600px) and (max-width: 959px) { .pdp__gallery > * { flex-basis: calc((100% + var(--pad) - 32px) / 2); } }
+@media (min-width: 960px) and (max-width: 1199px) { .pdp__gallery > * { flex-basis: calc((100% - 32px) / 2); } }
 @media (min-width: 960px) and (max-width: 1199px) { .pdp__gallery { margin: 0; padding: 0; scroll-padding: 0; } }
 .pdp__info { display: flex; flex-direction: column; gap: 22px; }
 .pdp__name { margin: 0; }
