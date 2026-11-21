@@ -33,6 +33,7 @@ const SHOP = {
 //  price: число или null (будет «Цена уточняется»)
 //  images: ["images/xxx-1.jpg", "images/xxx-2.jpg", ...] — первое фото в каталоге, второе при наведении
 //  status: "preorder" или "soon"
+//  short — короткое описание для каталога (2–3 строки)
 //  name / description / composition — на трёх языках
 // ============================================================
 
@@ -51,6 +52,7 @@ const PRODUCTS = [
     id: "tee-essential", gender: "unisex", category: "tops", price: null, status: "preorder", isNew: true,
     name: { en: "[Essential T-shirt]", ru: "[Базовая футболка]", fr: "[T-shirt Essential]" },
     colors: ["black", "white", "grey"], sizes: ["XS", "S", "M", "L", "XL"], images: [],
+    short: { en: "[Everyday tee in soft heavyweight cotton. Relaxed fit with a small embroidered MKG logo on the chest.]" },
     description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
     composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
@@ -58,6 +60,7 @@ const PRODUCTS = [
     id: "hoodie-half-zip", gender: "unisex", category: "hoodies", price: null, status: "preorder", isNew: true,
     name: { en: "[Half-zip hoodie]", ru: "[Худи на полумолнии]", fr: "[Sweat demi-zip]" },
     colors: ["olive", "black"], sizes: ["XS", "S", "M", "L", "XL"], images: [],
+    short: { en: "[Half-zip hoodie in brushed fleece. Contrast stitching, kangaroo pocket and a stand-up collar.]" },
     description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
     composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
@@ -65,6 +68,7 @@ const PRODUCTS = [
     id: "track-jacket", gender: "men", category: "hoodies", price: null, status: "preorder", isNew: true,
     name: { en: "[Zip track jacket]", ru: "[Спортивная куртка на молнии]", fr: "[Veste zippée]" },
     colors: ["navy", "black"], sizes: ["S", "M", "L", "XL"], images: [],
+    short: { en: "[Zip track jacket with contrast piping along the seams. Lightweight, easy to layer.]" },
     description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
     composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
@@ -72,6 +76,7 @@ const PRODUCTS = [
     id: "flared-pants", gender: "women", category: "pants", price: null, status: "preorder", isNew: true,
     name: { en: "[Flared pants]", ru: "[Брюки-клёш]", fr: "[Pantalon évasé]" },
     colors: ["black"], sizes: ["XS", "S", "M", "L"], images: [],
+    short: { en: "[High-waisted flared pants with contrast stitching. Stretch fabric that moves with you.]" },
     description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
     composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
@@ -79,6 +84,7 @@ const PRODUCTS = [
     id: "shorts", gender: "women", category: "pants", price: null, status: "preorder", isNew: false,
     name: { en: "[Shorts]", ru: "[Шорты]", fr: "[Short]" },
     colors: ["black", "red"], sizes: ["XS", "S", "M", "L", "XL"], images: [],
+    short: { en: "[Fitted cycling-style shorts with contrast seams. Soft stretch jersey, high waist.]" },
     description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
     composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
@@ -86,6 +92,7 @@ const PRODUCTS = [
     id: "denim-jacket", gender: "men", category: "hoodies", price: null, status: "soon", isNew: false,
     name: { en: "[Denim jacket]", ru: "[Джинсовая куртка]", fr: "[Veste en jean]" },
     colors: ["blue", "black"], sizes: ["S", "M", "L", "XL"], images: [],
+    short: { en: "[Washed denim jacket with an all-over tonal print and leather back patch. Boxy fit.]" },
     description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
     composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
@@ -93,6 +100,7 @@ const PRODUCTS = [
     id: "longsleeve", gender: "unisex", category: "tops", price: null, status: "preorder", isNew: false,
     name: { en: "[Longsleeve]", ru: "[Лонгслив]", fr: "[T-shirt manches longues]" },
     colors: ["black", "white"], sizes: ["XS", "S", "M", "L", "XL"], images: [],
+    short: { en: "[Long-sleeve tee in fine cotton jersey. Slim fit, ribbed cuffs, small logo on the sleeve.]" },
     description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
     composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },
@@ -100,6 +108,7 @@ const PRODUCTS = [
     id: "socks", gender: "unisex", category: "accessories", price: null, status: "preorder", isNew: false,
     name: { en: "[Socks]", ru: "[Носки]", fr: "[Chaussettes]" },
     colors: ["white", "black"], sizes: ["One size"], images: [],
+    short: { en: "[Ribbed cotton socks with a woven Monaco KG logo. Sold as a pair.]" },
     description: { en: "[Product description]", ru: "[Описание товара]", fr: "[Description du produit]" },
     composition: { en: "[Composition, care]", ru: "[Состав, уход]", fr: "[Composition, entretien]" },
   },

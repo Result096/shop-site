@@ -35,12 +35,14 @@
   }
   function card(p) {
     const second = p.images && p.images[1] ? media(p, 1, "card__alt") : "";
+    // name + price → short description (2–3 lines) → colours → Pre-order button at the very bottom
     return `<a class="card" href="${href("product/" + p.id)}">
-      <div class="card__media">${media(p, 0)}${second}
-        <span class="badge">${esc(p.status === "soon" ? t("badge_soon") : t("badge_preorder"))}</span></div>
+      <div class="card__media">${media(p, 0)}${second}</div>
       <div class="card__info">
         <div class="card__row"><span class="card__name">${esc(L(p.name))}</span><span>${esc(price(p))}</span></div>
+        ${p.short ? `<p class="card__desc">${esc(L(p.short))}</p>` : ""}
         ${swatches(p)}
+        <span class="card__btn${p.status === "soon" ? " card__btn--soon" : ""}">${esc(p.status === "soon" ? t("badge_soon") : t("badge_preorder"))}</span>
       </div></a>`;
   }
 
