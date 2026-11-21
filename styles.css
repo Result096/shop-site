@@ -208,8 +208,8 @@ main { min-height: 60vh; }
 /* ---------- catalogue: 400px photo screen, then a bar with All / Men / Women + count, then a 4-up grid ---------- */
 .pl-hero { position: relative; height: 400px; display: flex; align-items: flex-end; padding: 0 var(--side) 40px; color: var(--white); background: #3a3f44 50% 30% / cover no-repeat; }
 .pl-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.35), transparent 60%); }
-.pl-hero .hhead__t { position: relative; z-index: 1; }
-.pl-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 32px; margin: 0 var(--side); padding: 14px 0; border-bottom: 1px solid var(--line); }
+.pl-hero .hh__t { position: relative; z-index: 1; }
+.pl-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 32px; margin: max(32px, calc(60 * var(--u))) var(--side) 0; padding: 0 0 14px; border-bottom: 1px solid var(--line); }
 .pl-tabs { display: flex; flex-wrap: wrap; gap: 8px 32px; }
 .pl-link { background: none; border: 0; padding: 6px 0; cursor: pointer; color: #8a8a8a; text-transform: uppercase; font-size: clamp(14px, calc(18 * var(--u)), 18px); font-weight: 500; line-height: 1.1; }
 .pl-link:hover { color: var(--black); }

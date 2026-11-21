@@ -163,10 +163,9 @@
     const list = PRODUCTS.filter((p) => !g || p.gender === g || p.gender === "unisex")
       .sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
     const tab = (v, label, on) => `<button class="pl-link" data-q="g" data-v="${v}" aria-pressed="${on}">${esc(label)}</button>`;
-    const img = (g && SHOP.genderImages[g]) || SHOP.shopImage;
     return `
-    <section class="pl-hero"${bg(img)}>
-      <h1 class="hhead__t">${esc(g ? t("genders")[g] : t("nav_collection"))}</h1>
+    <section class="pl-hero"${bg(SHOP.shopImage)}>
+      <h1 class="hh__t">${esc(g ? t("genders")[g] : t("nav_collection"))}</h1>
     </section>
     <div class="pl-bar">
       <nav class="pl-tabs" aria-label="${esc(t("gender"))}">
