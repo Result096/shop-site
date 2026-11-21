@@ -251,7 +251,7 @@ main { min-height: 60vh; }
 /* catalogue columns step down smoothly: 4 (desktop) → 3 → 2 (tablet) → 1 (phone) */
 @media (min-width: 600px) { .pl-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px 16px; } }
 @media (min-width: 1000px) { .pl-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 56px 20px; } }
-@media (min-width: 1300px) { .pl-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: max(48px, calc(56 * var(--u))) 20px; } }
+@media (min-width: 1200px) { .pl-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: max(48px, calc(56 * var(--u))) 20px; } }
 .pl-grid .card__media { aspect-ratio: 290 / 398; background: #d9d9d9; }
 .pl-grid .card__media .ph { background: #d9d9d9; color: #8a8a8a; }
 .pl-grid .card__name { font-size: 13px; font-weight: 500; }
