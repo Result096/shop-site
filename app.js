@@ -90,7 +90,7 @@
   // Footer: numbered info strip → black brand block from the mock-up (two texts + logo) →
   // the earlier accordion sections (Contact / Shop / Help / Follow / Legal) + language → copyright.
   // Numbered info strip "01 No payment now · 02 Worldwide shipping · 03 Size guide"
-  // (on home it sits above the Category block, elsewhere right above the footer)
+  // (on home it sits between Category and the closing photo, elsewhere right above the footer)
   function strip() {
     const links = ["how", "how?s=faq", "size"];
     return `<nav class="strip" aria-label="Info">${t("strip").map((s, i) => `<a class="ulink" href="${href(links[i])}">0${i + 1} ${esc(s)}</a>`).join("")}</nav>`;
@@ -118,7 +118,7 @@
         <p class="ft__c2">${esc(t("brand_left")[1])}</p>
         <div class="ft__c3"><p>${esc(t("brand_right")[0])}</p><p class="ft__b">${esc(t("brand_right")[1])}</p></div>
         <p class="ft__tag ft__motto">${esc(t("brand_motto"))}</p>
-        <img class="ft__logo" src="images/logo-star.png" alt="${esc(SHOP.name)}" width="900" height="854" loading="lazy">
+        <picture class="ft__logo"><source media="(max-width: 899px)" srcset="images/logo-star-tight.png"><img src="images/logo-star.png" alt="${esc(SHOP.name)}" width="900" height="854" loading="lazy"></picture>
       </div>
       <div class="footer__cols">
         ${acc(t("f_contact"), contact)}
@@ -136,7 +136,7 @@
   const pages = {};
 
   // Home = Figma "Home" (0:3, 1920 artboard): hero (texts left/right, small logo + Shop now in the centre) →
-  // New collection (6 tiles) → info strip 01/02/03 → Category (Men / Women) → shared footer (Figma "Footer").
+  // New collection (6 tiles) → Category (Men / Women) → info strip 01/02/03 → closing photo → shared footer.
   const bg = (src) => (src ? ` style="background-image:url('${esc(src)}')"` : "");
   pages.home = () => {
     const items = PRODUCTS.slice().sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)).slice(0, 6);
@@ -159,11 +159,13 @@
       <div class="hhead"><h2 class="hhead__t">${esc(t("new_collection"))}</h2><a class="hhead__a" href="${href("shop")}">${esc(t("shop_now"))}</a></div>
       <div class="hn__row">${tiles}</div>
     </section>
-    ${strip()}
+
     <section class="hc">
       <div class="hhead"><h2 class="hhead__t">${esc(t("category"))}</h2><span class="hhead__note">${esc(t("season_label"))}</span></div>
       <div class="hc__grid">${cats}</div>
-    </section>`;
+    </section>
+    ${strip()}
+    <section class="hp"${bg(SHOP.closingImage)} role="img" aria-label="${esc(SHOP.name)}"></section>`;
   };
 
   // Catalogue: 400px photo screen with the title → bar with All / Men / Women + count → 4-up grid.
