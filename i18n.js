@@ -16,7 +16,8 @@ const T = {
     announce: "Every piece is available for pre-order, anywhere in the world",
     nav_shop: "Shop", nav_about: "About", nav_how: "How pre-order works", nav_contact: "Contact",
     menu: "Menu", close: "Close",
-    lang_banner: "Looks like you speak {lang}. Switch?", lang_switch: "Switch", lang_stay: "Stay in English",
+    loc_title: "Country / region", loc_sub: "Choose where you are and the language of the site.", loc_label: "Country / region",
+    regions: { intl: "International", europe: "Europe", cis: "Central Asia & CIS", mideast: "Middle East", americas: "Americas" },
 
     hero_title: "Grace is essential.<br>Fashion connects us.",
     hero_cta: "Shop the collection",
@@ -154,7 +155,8 @@ const T = {
     announce: "Все вещи доступны по предзаказу — с доставкой по всему миру",
     nav_shop: "Каталог", nav_about: "О бренде", nav_how: "Как работает предзаказ", nav_contact: "Контакты",
     menu: "Меню", close: "Закрыть",
-    lang_banner: "Похоже, вам удобнее {lang}. Переключить?", lang_switch: "Переключить", lang_stay: "Остаться на русском",
+    loc_title: "Страна / регион", loc_sub: "Выберите, где вы находитесь, и язык сайта.", loc_label: "Страна / регион",
+    regions: { intl: "Весь мир", europe: "Европа", cis: "Центральная Азия и СНГ", mideast: "Ближний Восток", americas: "Америка" },
 
     hero_title: "Грация — главное.<br>Мода объединяет нас.",
     hero_cta: "Смотреть коллекцию",
@@ -292,7 +294,8 @@ const T = {
     announce: "Toutes les pièces sont disponibles en précommande, partout dans le monde",
     nav_shop: "Boutique", nav_about: "À propos", nav_how: "Comment fonctionne la précommande", nav_contact: "Contact",
     menu: "Menu", close: "Fermer",
-    lang_banner: "Vous parlez {lang} ? Changer de langue ?", lang_switch: "Changer", lang_stay: "Rester en français",
+    loc_title: "Pays / région", loc_sub: "Choisissez où vous êtes et la langue du site.", loc_label: "Pays / région",
+    regions: { intl: "International", europe: "Europe", cis: "Asie centrale et CEI", mideast: "Moyen-Orient", americas: "Amériques" },
 
     hero_title: "La grâce est essentielle.<br>La mode nous relie.",
     hero_cta: "Découvrir la collection",

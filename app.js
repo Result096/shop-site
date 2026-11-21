@@ -4,6 +4,7 @@
   // ---------- helpers ----------
   const app = document.getElementById("app");
   const LS_KEY = "mkg-lang";
+  const LS_COUNTRY = "mkg-country";
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const store = {
     get(k) { try { return localStorage.getItem(k); } catch { return null; } },
@@ -20,6 +21,9 @@
   const price = (p) => (p.price == null ? t("price_tba") : p.price.toLocaleString(lang) + " " + SHOP.currency);
   const colorName = (c) => (COLORS[c] ? COLORS[c][lang] || COLORS[c].en : c);
   const byId = (id) => PRODUCTS.find((p) => p.id === id);
+  // Country / region the visitor picked (default: International, English)
+  const country = () => COUNTRIES.find((c) => c.code === store.get(LS_COUNTRY)) || COUNTRIES[0];
+  const locLabel = () => { const c = country(); return (c.code === "INT" ? "" : c.code + " / ") + lang.toUpperCase(); };
 
   function media(p, i = 0, cls = "") {
     const src = p.images && p.images[i];
@@ -52,7 +56,6 @@
   function header(active, mode) {
     const links = [["shop", "nav_collection"], ["about", "nav_about"], ["how", "nav_how"], ["size", "size_guide"], ["contact", "nav_contact"]];
     const nav = links.map(([p, k]) => `<a href="${href(p)}"${active === p ? ' aria-current="page"' : ""}>${esc(t(k))}</a>`).join("");
-    const opts = Object.keys(LANGS).map((l) => `<option value="${l}"${l === lang ? " selected" : ""}>${l.toUpperCase()}</option>`).join("");
     const logo = mode === "home" ? `<span></span>`
       : `<a class="logo" href="${href("")}"><img src="${mode ? "images/logo-hero.png" : "images/logo-header.png"}" alt="${esc(SHOP.name)}" width="${mode ? 600 : 368}" height="${mode ? 569 : 240}"></a>`;
     return `
@@ -66,7 +69,7 @@
           ${logo}
           <div class="header__r">
             <a class="hlink hlink--d" href="${href("contact")}"${active === "contact" ? ' aria-current="page"' : ""}>${esc(t("nav_contact"))}</a>
-            <label class="lang"><span class="sr">Language</span><select id="lang-select">${opts}</select></label>
+            <button class="hlink" data-loc aria-haspopup="dialog">${esc(locLabel())}</button>
           </div>
         </header>
         <nav class="drawer" id="drawer" hidden>${nav}</nav>
@@ -87,7 +90,6 @@
       SHOP.whatsapp ? `<a href="https://wa.me/${esc(SHOP.whatsapp.replace(/\D/g, ""))}" target="_blank" rel="noopener">WhatsApp</a>` : "",
       `<a href="${href("contact")}">${esc(t("contact_title"))}</a>`,
     ].join("");
-    const opts = Object.keys(LANGS).map((l) => `<option value="${l}"${l === lang ? " selected" : ""}>${esc(LANGS[l])}</option>`).join("");
     const stripLinks = ["how", "how?s=faq", "size"];
     return `
     <nav class="strip" aria-label="Info">${t("strip").map((s, i) => `<a class="ulink" href="${href(stripLinks[i])}">0${i + 1} ${esc(s)}</a>`).join("")}</nav>
@@ -104,22 +106,26 @@
         ${acc(t("f_help"), `<a href="${href("how")}">${esc(t("nav_how"))}</a><a href="${href("how?s=faq")}">FAQ</a><a href="${href("size")}">${esc(t("size_guide"))}</a>`)}
         ${acc(t("f_follow"), soc.join(""))}
         ${acc(t("f_legal"), Object.keys(lt).map((k) => `<a href="${href("legal/" + k)}">${esc(lt[k])}</a>`).join(""))}
-        <label class="footer__lang"><span>${esc(t("language"))}</span><select id="lang-select-f">${opts}</select></label>
+        <button class="footer__loc" data-loc aria-haspopup="dialog"><b>${esc(t("loc_label"))}</b> ${esc(L(country().name))} — ${esc(LANGS[lang])}</button>
       </div>
       <div class="footer__bottom"><span>© ${new Date().getFullYear()} ${esc(SHOP.name)}</span></div>
     </footer>`;
   }
 
-  function langBanner() {
-    if (store.get(LS_KEY)) return "";
-    const nav = (navigator.languages || [navigator.language || "en"]).map((l) => l.slice(0, 2).toLowerCase());
-    const pref = nav.find((l) => LANGS[l]);
-    if (!pref || pref === lang) return "";
-    return `<div class="lang-banner" id="lang-banner">
-      <span>${esc(T[pref].lang_banner.replace("{lang}", LANGS[pref]))}</span>
-      <button class="ulink" data-lang="${pref}">${esc(T[pref].lang_switch)}</button>
-      <button class="ulink muted-link" data-stay="1">${esc(t("lang_stay"))}</button>
-    </div>`;
+  // "Country / region" panel (slides in from the right): countries grouped by region,
+  // each with the languages available there. Picking one stores the country and switches the language.
+  function locModal() {
+    const cur = country();
+    const rows = (r) => COUNTRIES.filter((c) => c.region === r).map((c) => `<li class="loc__row${c === cur ? " is-on" : ""}">
+        <span class="loc__name">${esc(L(c.name))}</span>
+        <span class="loc__langs">${c.langs.map((l) => `<button type="button" data-country="${c.code}" data-lang="${l}" aria-pressed="${c === cur && l === lang}">${esc(LANGS[l])}</button>`).join("")}</span></li>`).join("");
+    const regions = Object.keys(t("regions")).filter((r) => COUNTRIES.some((c) => c.region === r));
+    return `<dialog class="modal loc" id="loc-modal" aria-labelledby="loc-title">
+      <div class="modal__body">
+        <button type="button" class="modal__close" data-close aria-label="${esc(t("close"))}"><svg width="14" height="14" viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13"/></svg></button>
+        <div><h2 class="loc__t" id="loc-title">${esc(t("loc_title"))}</h2><p class="loc__sub">${esc(t("loc_sub"))}</p></div>
+        ${regions.map((r) => `<section class="loc__group"><p class="loc__region">${esc(t("regions")[r])}</p><ul>${rows(r)}</ul></section>`).join("")}
+      </div></dialog>`;
   }
 
   // ---------- pages ----------
@@ -420,11 +426,10 @@
   </section>`;
 
   // ---------- router ----------
+  // The site opens in English; other languages only via the "Country / region" panel (remembered).
   function detectLang() {
     const saved = store.get(LS_KEY);
-    if (saved && LANGS[saved]) return saved;
-    const nav = (navigator.languages || [navigator.language || "en"]).map((l) => l.slice(0, 2).toLowerCase());
-    return nav.find((l) => LANGS[l]) || "en";
+    return saved && LANGS[saved] ? saved : "en";
   }
 
   function render() {
@@ -445,7 +450,7 @@
     const titles = { shop: "nav_collection", about: "nav_about", how: "nav_how", contact: "nav_contact", size: "size_guide" };
     document.title = (titles[page] ? t(titles[page]) + " — " : "") + SHOP.name;
 
-    app.innerHTML = langBanner() + header(page, fn === pages.home ? "home" : fn === pages.how ? "over" : "") +`<main id="main">${fn(args, q)}</main>` + footer();
+    app.innerHTML = header(page, fn === pages.home ? "home" : fn === pages.how ? "over" : "") +`<main id="main">${fn(args, q)}</main>` + footer() + locModal();
     const target = q.get("s") && document.getElementById(q.get("s"));
     if (target) target.scrollIntoView(); else window.scrollTo(0, 0);
     bind(page, q);
@@ -486,14 +491,16 @@
     const menuBtn = document.getElementById("menu-btn");
     menuBtn.onclick = () => { drawer.hidden = !drawer.hidden; menuBtn.setAttribute("aria-expanded", String(!drawer.hidden)); };
 
-    document.getElementById("lang-select").onchange = (e) => switchLang(e.target.value);
-    document.getElementById("lang-select-f").onchange = (e) => switchLang(e.target.value);
-    const banner = document.getElementById("lang-banner");
-    if (banner) banner.onclick = (e) => {
-      const b = e.target.closest("button"); if (!b) return;
-      if (b.dataset.lang) switchLang(b.dataset.lang);
-      else { store.set(LS_KEY, lang); banner.remove(); }
-    };
+    const loc = document.getElementById("loc-modal");
+    document.querySelectorAll("[data-loc]").forEach((b) => (b.onclick = () => loc.showModal()));
+    loc.querySelector("[data-close]").onclick = () => loc.close();
+    loc.addEventListener("click", (e) => {
+      if (e.target === loc) return loc.close();
+      const b = e.target.closest("[data-country]"); if (!b) return;
+      store.set(LS_COUNTRY, b.dataset.country);
+      loc.close();
+      if (b.dataset.lang === lang) render(); else switchLang(b.dataset.lang);
+    });
 
     document.querySelectorAll("[data-q]").forEach((el) => {
       if (el.tagName === "SELECT") el.onchange = () => setQuery(el.dataset.q, el.value);
