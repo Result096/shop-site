@@ -166,6 +166,11 @@ main { min-height: 60vh; }
 .tile__media .ph { background: #d9d9d9; color: #8a8a8a; }
 .tile__media > * { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s; }
 .tile:hover .tile__media > img { transform: scale(1.03); }
+/* New collection: pieces sit at 50% opacity and come to 100% on hover (mouse only; on touch screens they stay at 100%) */
+@media (hover: hover) {
+  .hn .tile__media { opacity: .5; transition: opacity .35s ease; }
+  .hn .tile:hover .tile__media, .hn .tile:focus-visible .tile__media { opacity: 1; }
+}
 .tile__cap { position: absolute; top: 100%; left: 0; right: 0; margin-top: 10px; display: flex; justify-content: space-between; gap: 8px; font-size: 12px; text-transform: uppercase; opacity: 0; transition: opacity .2s; }
 .tile:hover .tile__cap, .tile:focus-visible .tile__cap { opacity: 1; }
 @media (hover: none) { .tile__cap { opacity: 1; } }
@@ -180,8 +185,10 @@ main { min-height: 60vh; }
 @media (min-width: 768px) { .hc__tile { height: max(340px, calc(600 * var(--u))); } }
 .hc__tile > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .8s; }
 .hc__tile--women > img { object-position: 50% 21%; }
-.hc__tile::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.4); }
-.hc__tile:hover > img { transform: scale(1.02); }
+/* Men / Women: 40% shade that clears on hover, photo zooms in a little more */
+.hc__tile::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.4); transition: background .5s ease; }
+.hc__tile:hover::after, .hc__tile:focus-visible::after { background: rgba(0,0,0,0); }
+.hc__tile:hover > img, .hc__tile:focus-visible > img { transform: scale(1.05); }
 .hc__label { position: absolute; z-index: 1; left: var(--side); top: 46.2%; display: grid; justify-items: start; gap: 10px; font-size: clamp(14px, calc(16 * var(--u)), 16px); line-height: 1.1; text-transform: uppercase; }
 .hc__shop { text-decoration: underline; text-underline-offset: 3px; }
 .hc__label b { font-weight: 700; }
