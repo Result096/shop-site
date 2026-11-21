@@ -285,6 +285,16 @@ main { min-height: 60vh; }
 .ab-text { margin: 0; font-size: 16px; line-height: 1.4; }
 .ab-photo { margin: 0 var(--side); height: max(320px, calc(720 * var(--u))); background: #d9d9d9 50% 30% / cover no-repeat; }
 .ab-photo.ph { width: auto; }
+/* phones / tablets: text → photo → text → photo → text (each row = [photo,] text).
+   desktop: the earlier two-column layout — row 2 photo left / text right, row 3 text left / photo right */
+@media (min-width: 900px) {
+  .ab-row { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; max-width: var(--max); margin: 0 auto; padding: 56px var(--side); }
+  .ab-row .ab-block { padding: 0; }
+  .ab-row:first-of-type { display: block; padding-top: 0; padding-bottom: 0; }
+  .ab-row:first-of-type .ab-block { padding: 56px 0; }
+  .ab-row .ab-photo { margin: 0; height: auto; aspect-ratio: 4 / 5; }
+  .ab-row--r .ab-block { order: -1; }
+}
 /* closing band: title / sign / link 30px apart, more air above and below */
 .ab-motto { display: grid; justify-items: center; gap: 30px; text-align: center; padding: max(80px, calc(160 * var(--u))) var(--side); background: var(--band); }
 .ab-motto__t { margin: 0; max-width: 24ch; font-size: clamp(20px, calc(24 * var(--u)), 24px); font-weight: 700; line-height: 1; text-transform: uppercase; }

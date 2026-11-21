@@ -312,9 +312,10 @@
     <section class="hero hero--short ab-hero"${bg(SHOP.aboutImage)}>
       <div class="hero__content"><p class="ab-hero__eyebrow">${esc(t("about_title"))}</p><h1 class="hh__t">${esc(SHOP.name)}</h1></div>
     </section>
-    ${b.map(([h, p], i) => `<section class="ab-block">
-        <p class="ab-num">0${i + 1}</p><h2 class="hhead__t">${esc(h)}</h2><p class="ab-text">${esc(p)}</p>
-      </section>${i < b.length - 1 ? photo(i) : ""}`).join("")}
+    ${b.map(([h, p], i) => `<div class="ab-row${i === 2 ? " ab-row--r" : ""}">
+        ${i ? photo(i - 1) : ""}
+        <section class="ab-block"><p class="ab-num">0${i + 1}</p><h2 class="hhead__t">${esc(h)}</h2><p class="ab-text">${esc(p)}</p></section>
+      </div>`).join("")}
     <section class="ab-motto">
       <h2 class="ab-motto__t">${esc(t("about_motto"))}</h2>
       <p class="ab-motto__sign">${t("about_sign").map(esc).join("<br>")}</p>
