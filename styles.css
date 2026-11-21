@@ -358,10 +358,15 @@ main { min-height: 60vh; }
 @media (min-width: 960px) { .pdp { grid-template-columns: minmax(0, 1.6fr) minmax(320px, 1fr); gap: 48px; align-items: start; } .pdp__info { position: sticky; top: 84px; } }
 .pdp__gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .pdp__gallery > * { aspect-ratio: 3 / 4; object-fit: cover; width: 100%; }
-@media (max-width: 959px) {
-  .pdp__gallery { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 calc(-1 * var(--pad)); padding: 0 var(--pad); scrollbar-width: none; }
+/* below 1200px the photos become a swipe row: phones — one photo + edge of the next;
+   tablets / small laptops (600–1199px) — two photos + edge of the third. 2×2 grid from 1200px. */
+@media (max-width: 1199px) {
+  .pdp__gallery { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 calc(-1 * var(--pad)); padding: 0 var(--pad); scroll-padding: 0 var(--pad); scrollbar-width: none; }
+  .pdp__gallery::-webkit-scrollbar { display: none; }
   .pdp__gallery > * { flex: 0 0 82%; scroll-snap-align: start; }
 }
+@media (min-width: 600px) and (max-width: 1199px) { .pdp__gallery > * { flex-basis: 42%; } }
+@media (min-width: 960px) and (max-width: 1199px) { .pdp__gallery { margin: 0; padding: 0; scroll-padding: 0; } }
 .pdp__info { display: flex; flex-direction: column; gap: 22px; }
 .pdp__name { margin: 0; }
 .pdp__price { margin: -14px 0 0; font-size: 14px; }
