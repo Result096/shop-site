@@ -6,7 +6,7 @@
 const SHOP = {
   name: "MONACO KG ESSENTIALS",
   shortName: "MONACO KG",
-  currency: "€",            // знак валюты для цен
+  currency: "$",            // знак валюты перед ценой: $120
 
   // ID формы Formspree (см. README.md). Пример: "xyzabcd"
   formspreeId: "",
@@ -30,7 +30,7 @@ const SHOP = {
 //  ТОВАРЫ — ПРИМЕРЫ. Замените на свои.
 //  gender: men | women | unisex (unisex показывается и в «Мужском», и в «Женском»)
 //  category: tops | hoodies | pants | accessories
-//  price: число или null (будет «Цена уточняется»)
+//  price: число, например 120 (будет $120), или null (будет $000)
 //  images: ["images/xxx-1.jpg", "images/xxx-2.jpg", ...] — первое фото в каталоге, второе при наведении
 //  status: "preorder" или "soon"
 //  short — короткое описание для каталога (2–3 строки)

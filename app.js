@@ -16,7 +16,8 @@
   };
   const L = (obj) => (obj && (obj[lang] ?? obj.en)) || "";
   const href = (path) => "#/" + lang + (path ? "/" + path : "");
-  const price = (p) => (p.price == null ? t("price_tba") : p.price.toLocaleString(lang) + " " + SHOP.currency);
+  // "$000" is the placeholder until real prices are set in config.js
+  const price = (p) => SHOP.currency + (p.price == null ? "000" : p.price.toLocaleString("en-US"));
   const colorName = (c) => (COLORS[c] ? COLORS[c][lang] || COLORS[c].en : c);
   const byId = (id) => PRODUCTS.find((p) => p.id === id);
 
