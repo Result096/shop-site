@@ -389,7 +389,10 @@ main { min-height: 60vh; }
 .also { padding: max(96px, calc(200 * var(--u))) 0 max(72px, calc(180 * var(--u))); }
 .also .hhead { margin-bottom: max(24px, calc(40 * var(--u))); }
 .also__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px 20px; padding: 0 var(--side); }
+/* same steps as the catalogue: 1 → 2 (600px) → 3 (1000px) → 4 (1200px) */
 @media (min-width: 600px) { .also__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { .also__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1200px) { .also__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 .also__grid .card__media { aspect-ratio: 290 / 398; background: #d9d9d9; }
 .also__grid .card__media .ph { background: #d9d9d9; color: #8a8a8a; }
 .also__grid .card__name { font-size: 13px; font-weight: 500; }
