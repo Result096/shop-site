@@ -63,6 +63,8 @@ button, select, input, textarea { font: inherit; color: inherit; }
 
 /* ---------- header (Figma: 16px medium caps, 40px side padding, 40px below the announcement bar) ---------- */
 :root { --u: calc(100vw / 1920); --side: max(16px, calc(40 * var(--u))); }
+/* phones / tablets: 20px side margins like the Figma mobile frames */
+@media (max-width: 899px) { :root { --side: 20px; } }
 .announce { background: #212121; color: var(--white); text-align: center; text-transform: uppercase; font-size: clamp(11px, calc(14 * var(--u)), 14px); line-height: 1.2; padding: 0 var(--pad); min-height: 42px; display: grid; place-items: center; }
 /* .top wraps header + drawer; sticky white on inner pages, transparent over the photo on home / pre-order */
 .top { position: sticky; top: 0; z-index: 20; background: var(--white); border-bottom: 1px solid var(--line); }
@@ -440,9 +442,16 @@ details p { margin: 0 0 18px; max-width: 70ch; }
 .ft__b { font-weight: 700; text-transform: uppercase; }
 .ft__logo { display: block; mix-blend-mode: lighten; }
 .ft__logo img { display: block; width: 100%; height: auto; }
+/* phones / tablets — Figma "footer mob" (420 wide): one column, motto before the third paragraph,
+   gaps 10 / 30 / 20 / 30 / 30 / 40, logo 120 wide centred, 30px to the navigation below */
 @media (max-width: 899px) {
-  .ft { gap: 18px; padding: 48px 0 32px; }
-  .ft__logo { width: 120px; justify-self: start; margin-top: 12px; }
+  .ft { display: flex; flex-direction: column; gap: 0; padding: 47px 0 30px; }
+  .ft__h { margin-bottom: 10px !important; }
+  .ft__c1 { order: 1; margin-top: 30px !important; }
+  .ft__c2 { order: 2; margin-top: 20px !important; }
+  .ft__motto { order: 3; margin-top: 30px !important; }
+  .ft__c3 { order: 4; margin-top: 30px; }
+  .ft__logo { order: 5; width: 120px; align-self: center; margin-top: 40px; }
 }
 @media (min-width: 900px) {
   .ft { grid-template-columns: calc(290 * var(--u)) calc(443 * var(--u)) calc(445 * var(--u)) 1fr;
