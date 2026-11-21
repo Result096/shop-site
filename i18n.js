@@ -66,7 +66,7 @@ const T = {
     bag_form_title: "Pre-order details", bag_form_sub: "No payment now. Leave your details and we'll email you as soon as your pieces are ready to ship.",
     preorder_note: "No payment now. We'll email you as soon as this piece is ready to ship. Worldwide shipping.",
     d_description: "Description", d_composition: "Composition & care", d_shipping: "Shipping & pre-order",
-    shipping_text: "[Estimated timing, worldwide shipping details]",
+    shipping_text: "Estimated timing, worldwide shipping details",
     also_like: "You may also like",
     pick_size_first: "Please choose a size.",
 
