@@ -50,7 +50,7 @@ const T = {
 
     badge_preorder: "Pre-order", badge_soon: "Coming soon", price_tba: "Price TBA",
 
-    crumbs_home: "Home",
+    crumbs_home: "Home", back: "Back",
     shop_title: "Shop", shop_sub: "All pieces are available for pre-order. No payment now.",
     cat_all: "All",
     cats: { tops: "T-shirts & tops", hoodies: "Hoodies & jackets", pants: "Pants & shorts", accessories: "Accessories" },
@@ -190,7 +190,7 @@ const T = {
 
     badge_preorder: "Предзаказ", badge_soon: "Скоро", price_tba: "Цена уточняется",
 
-    crumbs_home: "Главная",
+    crumbs_home: "Главная", back: "Назад",
     shop_title: "Каталог", shop_sub: "Все вещи доступны по предзаказу. Без оплаты сейчас.",
     cat_all: "Все",
     cats: { tops: "Футболки и топы", hoodies: "Худи и куртки", pants: "Брюки и шорты", accessories: "Аксессуары" },
@@ -327,7 +327,7 @@ const T = {
 
     badge_preorder: "Précommande", badge_soon: "Bientôt", price_tba: "Prix à venir",
 
-    crumbs_home: "Accueil",
+    crumbs_home: "Accueil", back: "Retour",
     shop_title: "Boutique", shop_sub: "Toutes les pièces sont disponibles en précommande. Aucun paiement maintenant.",
     cat_all: "Tout",
     cats: { tops: "T-shirts et tops", hoodies: "Sweats et vestes", pants: "Pantalons et shorts", accessories: "Accessoires" },

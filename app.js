@@ -196,18 +196,19 @@
     const more = PRODUCTS.filter((x) => x.id !== p.id).sort((a, b) => (b.category === p.category) - (a.category === p.category)).slice(0, 4);
     const canOrder = p.status === "preorder";
     return `
-    <div class="block crumbs"><p class="eyebrow"><a href="${href("")}">${esc(t("crumbs_home"))}</a> / <a href="${href("shop")}">${esc(t("shop_title"))}</a> / <a href="${href("shop?cat=" + p.category)}">${esc(t("cats")[p.category] || "")}</a> / ${esc(L(p.name))}</p></div>
+    <div class="back-row"><a class="back" href="${href("shop")}" data-back>${esc(t("back"))}</a></div>
     <section class="pdp">
       <div class="pdp__gallery">${imgs.join("")}</div>
       <div class="pdp__info" id="pdp" data-id="${esc(p.id)}">
         <span class="badge badge--inline">${esc(canOrder ? t("badge_preorder") : t("badge_soon"))}</span>
         <h1 class="pdp__name">${esc(L(p.name))}</h1>
         <p class="pdp__price">${esc(price(p))}</p>
+        ${p.short ? `<p class="pdp__short">${esc(L(p.short))}</p>` : ""}
 
         <div class="opt">
           <p>${esc(t("colour"))}: <strong id="color-label">${esc(colorName(p.colors[0]))}</strong></p>
           <div class="opt__row" role="radiogroup" aria-label="${esc(t("colour"))}">
-            ${p.colors.map((c, i) => `<button class="dot" role="radio" aria-checked="${i === 0}" data-color="${c}" aria-label="${esc(colorName(c))}"><span style="background:${COLORS[c] ? COLORS[c].hex : "#ccc"}"></span></button>`).join("")}
+            ${p.colors.map((c, i) => `<button class="dot dot--sq" role="radio" aria-checked="${i === 0}" data-color="${c}" aria-label="${esc(colorName(c))}"><span style="background:${COLORS[c] ? COLORS[c].hex : "#ccc"}"></span></button>`).join("")}
           </div>
         </div>
 
@@ -219,7 +220,7 @@
           <p class="err" id="size-err" hidden>${esc(t("pick_size_first"))}</p>
         </div>
 
-        <button class="btn btn--full" id="add-to-bag" ${canOrder ? "" : "disabled"}>${esc(canOrder ? t("add_to_bag") : t("badge_soon"))}</button>
+        <button class="pdp__add" id="add-to-bag" ${canOrder ? "" : "disabled"}>${esc(canOrder ? t("add_to_bag") : t("badge_soon"))}</button>
         <p class="added" id="added" hidden>${esc(t("added_to_bag"))} — <a class="ulink" href="${href("bag")}">${esc(t("view_bag"))}</a></p>
         <p class="note">${esc(t("preorder_note"))}</p>
 
@@ -230,10 +231,10 @@
         </div>
       </div>
     </section>
-    <section class="block">
-      <h2 class="h2">${esc(t("also_like"))}</h2>
-    </section>
-    <section class="grid grid--edge">${more.map(card).join("")}</section>`;
+    <section class="also">
+      <div class="hhead"><h2 class="hhead__t">${esc(t("also_like"))}</h2></div>
+      <div class="also__grid">${more.map(card).join("")}</div>
+    </section>`;
   };
 
   const COUNTRY_CODES = "AF AX AL DZ AD AO AI AG AR AM AW AU AT AZ BS BH BD BB BY BE BZ BJ BM BT BO BA BW BR BN BG BF BI CV KH CM CA KY CF TD CL CN CO KM CG CD CR CI HR CU CW CY CZ DK DJ DM DO EC EG SV GQ ER EE SZ ET FO FJ FI FR GF PF GA GM GE DE GH GI GR GL GD GP GU GT GG GN GW GY HT HN HK HU IS IN ID IR IQ IE IM IL IT JM JP JE JO KZ KE KI KW KG LA LV LB LS LR LY LI LT LU MO MG MW MY MV ML MT MH MQ MR MU YT MX FM MD MC MN ME MS MA MZ MM NA NR NP NL NC NZ NI NE NG MK NO OM PK PW PS PA PG PY PE PH PL PT PR QA RE RO RU RW BL KN LC MF PM VC WS SM ST SA SN RS SC SL SG SX SK SI SB SO ZA KR SS ES LK SD SR SE CH SY TW TJ TZ TH TL TG TO TT TN TR TM TC TV UG UA AE GB US UY UZ VU VA VE VN VG VI WF EH YE ZM ZW".split(" ");
@@ -476,6 +477,8 @@
       else if (el.tagName === "BUTTON") el.onclick = () => setQuery(el.dataset.q, el.dataset.v === "all" ? "" : el.dataset.v);
     });
 
+    // "Back" goes to the previous page (falls back to the catalogue when opened directly)
+    document.querySelectorAll("[data-back]").forEach((a) => (a.onclick = (e) => { if (history.length > 1) { e.preventDefault(); history.back(); } }));
     if (page === "product") bindProduct();
     if (page === "bag") bindBag();
     if (page === "contact") {

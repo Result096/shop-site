@@ -372,6 +372,27 @@ main { min-height: 60vh; }
 .dot { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: var(--white); display: grid; place-items: center; cursor: pointer; padding: 0; }
 .dot span { width: 28px; height: 28px; border-radius: 50%; border: 1px solid #bdbdbd; }
 .dot[aria-checked="true"] { border: 2px solid var(--black); }
+/* "Back" link instead of breadcrumbs */
+.back-row { padding: 24px var(--side) 20px; }
+.back { font-size: 14px; text-transform: uppercase; text-decoration: underline; text-underline-offset: 3px; }
+.back::before { content: "← "; }
+.back:hover { opacity: .6; }
+/* square colour chips, a little smaller */
+.dot--sq { width: 34px; height: 34px; border-radius: 0; }
+.dot--sq span { width: 22px; height: 22px; border-radius: 0; }
+.pdp__short { margin: -8px 0 0; font-size: 14px; line-height: 1.4; color: var(--muted); max-width: 46ch; }
+/* Add to bag: underlined caps link like "Shop now" (no filled button) */
+.pdp__add { align-self: flex-start; background: none; border: 0; padding: 6px 0; cursor: pointer; color: var(--black); font-size: 16px; font-weight: 500; text-transform: uppercase; text-decoration: underline; text-underline-offset: 4px; }
+.pdp__add:hover { opacity: .6; }
+.pdp__add:disabled { color: #8a8a8a; text-decoration: none; cursor: not-allowed; opacity: 1; }
+/* You may also like: big gap after the product, title close to the cards, no lines, 2 large cards per row */
+.also { padding: max(96px, calc(200 * var(--u))) 0 max(72px, calc(180 * var(--u))); }
+.also .hhead { margin-bottom: max(24px, calc(40 * var(--u))); }
+.also__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px 20px; padding: 0 var(--side); }
+@media (min-width: 600px) { .also__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.also__grid .card__media { aspect-ratio: 290 / 398; background: #d9d9d9; }
+.also__grid .card__media .ph { background: #d9d9d9; color: #8a8a8a; }
+.also__grid .card__name { font-size: 13px; font-weight: 500; }
 .sz { min-width: 56px; min-height: 44px; border: 1px solid var(--line); background: var(--white); cursor: pointer; text-transform: uppercase; font-size: 12px; padding: 0 12px; }
 .sz:hover { border-color: var(--black); }
 .sz[aria-checked="true"] { background: var(--black); color: var(--white); border-color: var(--black); }
