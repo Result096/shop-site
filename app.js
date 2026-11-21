@@ -155,44 +155,24 @@
     <section class="hp"${bg(SHOP.closingImage)} role="img" aria-label="${esc(SHOP.name)}"></section>`;
   };
 
-  // Shop state lives in the URL query: #/en/shop?cat=tops&color=black&size=M&sort=new
+  // Catalogue: 400px photo screen with the title → bar with All / Men / Women + count → 4-up grid.
+  // Only two categories for now (few pieces), no filters. State in the URL: #/en/shop?g=men
   pages.shop = (_, q) => {
-    const cat = q.get("cat") || "all", color = q.get("color") || "", size = q.get("size") || "", sort = q.get("sort") || "new";
     const g = t("genders")[q.get("g")] ? q.get("g") : "";
-    // unisex pieces show up under both Men and Women
-    let list = PRODUCTS.filter((p) => (!g || p.gender === g || p.gender === "unisex") && (cat === "all" || p.category === cat) && (!color || p.colors.includes(color)) && (!size || p.sizes.includes(size)));
-    if (sort === "low" || sort === "high") {
-      list = list.slice().sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity));
-      if (sort === "high") list.reverse();
-    } else list = list.slice().sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
-
-    // Catalogue in the home-page language: 46px caps title + [count], Men/Women tabs,
-    // a thin bar with category links (left) and Colour / Size / Sort (right), 4-up grid of 290×398 tiles.
-    const cats = ["all", ...Object.keys(T.en.cats).filter((c) => PRODUCTS.some((p) => p.category === c))];
-    const tab = (q, v, label, on) => `<button class="pl-link" data-q="${q}" data-v="${v}" aria-pressed="${on}">${esc(label)}</button>`;
-    const colors = [...new Set(PRODUCTS.flatMap((p) => p.colors))];
-    const sizes = [...new Set(PRODUCTS.flatMap((p) => p.sizes))];
-    const sel = (name, label, items, cur) => `<label class="pl-sel"><span>${esc(label)}</span><select data-q="${name}">
-      ${items.map(([v, txt]) => `<option value="${esc(v)}"${v === cur ? " selected" : ""}>${esc(txt)}</option>`).join("")}</select></label>`;
+    // unisex pieces show up under both Men and Women; new pieces first
+    const list = PRODUCTS.filter((p) => !g || p.gender === g || p.gender === "unisex")
+      .sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+    const tab = (v, label, on) => `<button class="pl-link" data-q="g" data-v="${v}" aria-pressed="${on}">${esc(label)}</button>`;
+    const img = (g && SHOP.genderImages[g]) || SHOP.shopImage;
     return `
-    <section class="pl-head">
-      <p class="pl-crumbs"><a href="${href("")}">${esc(t("crumbs_home"))}</a> / ${esc(t("nav_collection"))}</p>
-      <div class="pl-title">
-        <h1 class="hhead__t">${esc(g ? t("genders")[g] : t("nav_collection"))}</h1>
-        <span class="pl-count">[${esc(t("n_products", { n: list.length }))}]</span>
-      </div>
-      <nav class="pl-tabs" aria-label="${esc(t("gender"))}">
-        ${tab("g", "all", t("f_all"), !g)}${Object.entries(t("genders")).map(([k, v]) => tab("g", k, v, g === k)).join("")}
-      </nav>
-      <p class="pl-sub">${esc(t("shop_sub"))}</p>
+    <section class="pl-hero"${bg(img)}>
+      <h1 class="hhead__t">${esc(g ? t("genders")[g] : t("nav_collection"))}</h1>
     </section>
     <div class="pl-bar">
-      <div class="pl-cats" role="group" aria-label="Category">${cats.map((c) => tab("cat", c, c === "all" ? t("cat_all") : t("cats")[c], c === cat)).join("")}</div>
-      <div class="pl-filters">
-        ${sel("color", t("f_colour"), [["", t("f_all")], ...colors.map((c) => [c, colorName(c)])], color)}
-        ${sel("size", t("f_size"), [["", t("f_all")], ...sizes.map((s) => [s, s])], size)}
-        ${sel("sort", t("sort"), [["new", t("sort_new")], ["low", t("sort_low")], ["high", t("sort_high")]], sort)}
-      </div>
+      <nav class="pl-tabs" aria-label="${esc(t("gender"))}">
+        ${tab("all", t("f_all"), !g)}${Object.entries(t("genders")).map(([k, v]) => tab(k, v, g === k)).join("")}
+      </nav>
+      <span class="pl-count">[${esc(t("n_products", { n: list.length }))}]</span>
     </div>
     <section class="pl-grid">${list.length ? list.map(card).join("") : `<p class="pl-empty">${esc(t("empty"))}</p>`}</section>`;
   };
