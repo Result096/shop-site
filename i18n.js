@@ -94,8 +94,8 @@ const T = {
       ["A universal language", "Fashion is more than what we wear. It is a universal language — a way to express who we are, share our stories, and bring people together. Our purpose is to spread love, joy, happiness, comfort, and grace through fashion, while creating timeless pieces that people can feel confident and comfortable wearing wherever life takes them."],
       ["A global family", "More than clothing. We are building a global community — a family. A family where it does not matter where you come from, who you are, or what you do. We believe that despite our differences, we can stand together, support one another, celebrate our cultures, and move as one. From one community to another, from one country to the next, our goal is to create something that connects the world through fashion."],
     ],
-    about_motto: "Different people. Different cultures. One family. One movement.",
-    about_sign: "Monaco KG Essentials — Grace is essential. Fashion connects us.",
+    about_motto: "Different people. Different cultures. One family. One movement",
+    about_sign: ["Monaco KG Essentials — Grace is essential", "Fashion connects us"],
     founder: "The founder", founder_name: "[Founder's name]", founder_story: "[The story of the brand — optional]",
 
     how_page_title: "How pre-order works",

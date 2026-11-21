@@ -277,6 +277,20 @@ main { min-height: 60vh; }
 .bag-item__rm { background: none; border: 0; padding: 0; cursor: pointer; color: inherit; }
 .added { margin: -10px 0 0; font-size: 13px; }
 
+/* ---------- About page (site type scale: 20px bold titles, 16px text, 16px light labels) ---------- */
+.ab-hero .hero__content { gap: 8px; }
+.ab-hero__eyebrow { margin: 0; font-size: 16px; font-weight: 300; text-transform: uppercase; }
+.ab-block { display: grid; gap: 14px; max-width: 760px; padding: max(64px, calc(120 * var(--u))) var(--side); }
+.ab-num { margin: 0; font-size: 16px; font-weight: 300; }
+.ab-text { margin: 0; font-size: 16px; line-height: 1.4; }
+.ab-photo { margin: 0 var(--side); height: max(320px, calc(720 * var(--u))); background: #d9d9d9 50% 30% / cover no-repeat; }
+.ab-photo.ph { width: auto; }
+/* closing band: title / sign / link 30px apart, more air above and below */
+.ab-motto { display: grid; justify-items: center; gap: 30px; text-align: center; padding: max(80px, calc(160 * var(--u))) var(--side); background: var(--band); }
+.ab-motto__t { margin: 0; max-width: 24ch; font-size: clamp(20px, calc(24 * var(--u)), 24px); font-weight: 700; line-height: 1; text-transform: uppercase; }
+.ab-motto__sign { margin: 0; font-size: 16px; font-weight: 300; line-height: 1.3; color: var(--black); }
+@media (max-width: 599px) { .ab-motto { gap: 24px; } }
+
 /* ---------- numbered info strip ---------- */
 .strip { display: flex; flex-wrap: wrap; gap: 12px 40px; padding: 22px var(--side); border-top: 1px solid var(--line); background: var(--white); }
 .strip .ulink { font-size: 12px; }

@@ -304,22 +304,21 @@
 
   pages.about = () => {
     const b = t("about_blocks");
+    // text block → photo → text block → photo → text block (photos from SHOP.aboutImages, placeholders until set)
+    const photo = (i) => SHOP.aboutImages[i]
+      ? `<div class="ab-photo"${bg(SHOP.aboutImages[i])} role="img" aria-label="${esc(SHOP.name)}"></div>`
+      : `<div class="ab-photo ph"><span>${esc(t("about_hero_ph"))}</span></div>`;
     return `
-    <section class="hero hero--short" ${SHOP.aboutImage ? `style="background-image:url('${esc(SHOP.aboutImage)}')"` : ""}>
-      <div class="hero__content"><p class="eyebrow eyebrow--light">${esc(t("about_title"))}</p><h1 class="hero__title">${esc(SHOP.name)}</h1></div>
+    <section class="hero hero--short ab-hero"${bg(SHOP.aboutImage)}>
+      <div class="hero__content"><p class="ab-hero__eyebrow">${esc(t("about_title"))}</p><h1 class="hh__t">${esc(SHOP.name)}</h1></div>
     </section>
-    ${b.map(([h, p], i) => `<section class="block split ${i % 2 ? "split--rev" : ""}">
-      <div><p class="eyebrow">0${i + 1}</p><h2 class="h2">${esc(h)}</h2><p class="body">${esc(p)}</p></div>
-      ${i === 0 ? "" : `<div class="ph split__img"><span>${esc(t("about_hero_ph"))}</span></div>`}
-    </section>`).join("")}
-    <section class="band"><div class="block center">
-      <h2 class="h2 h2--big">${esc(t("about_motto"))}</h2>
-      <p class="muted">${esc(t("about_sign"))}</p>
-      <a class="btn" href="${href("shop")}">${esc(t("hero_cta"))}</a>
-    </div></section>
-    <section class="block split">
-      <div class="ph split__img"><span>${esc(t("founder"))}</span></div>
-      <div><p class="eyebrow">${esc(t("founder"))}</p><h2 class="h2">${esc(t("founder_name"))}</h2><p class="body">${esc(t("founder_story"))}</p></div>
+    ${b.map(([h, p], i) => `<section class="ab-block">
+        <p class="ab-num">0${i + 1}</p><h2 class="hhead__t">${esc(h)}</h2><p class="ab-text">${esc(p)}</p>
+      </section>${i < b.length - 1 ? photo(i) : ""}`).join("")}
+    <section class="ab-motto">
+      <h2 class="ab-motto__t">${esc(t("about_motto"))}</h2>
+      <p class="ab-motto__sign">${t("about_sign").map(esc).join("<br>")}</p>
+      <a class="hhead__a" href="${href("shop")}">${esc(t("hero_cta"))}</a>
     </section>`;
   };
 

@@ -17,7 +17,8 @@ const SHOP = {
   tiktok: "",               // ник без @
 
   heroImage: "images/hero.jpg", // фото первого экрана
-  aboutImage: "",           // большое фото на странице «О бренде»
+  aboutImage: "",           // большое фото первого экрана страницы «О бренде»
+  aboutImages: [],          // 2 фото между блоками «О бренде»: после Our vision и после A universal language
   closingImage: "images/hero.jpg", // большое фото внизу главной, перед подвалом
   shopImage: "images/hero.jpg",    // фото верхнего экрана каталога (400px), одно для All / Men / Women
   howImage: "images/cat-men.jpg",  // фото первого экрана страницы «Как работает предзаказ»
