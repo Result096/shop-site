@@ -26,7 +26,7 @@ const T = {
     cards: [["Our story", "about"], ["How pre-order works", "how"], ["Contact us", "contact"]],
     strip: ["No payment now", "Worldwide shipping", "Size guide"],
     footer_vision: "At Monaco KG Essentials, our vision is to bring fashion to every part of the world and use it as a powerful way to connect people beyond borders, cultures, backgrounds, and differences.",
-    hero_l: "Grace is essential", hero_r: "Fashion connects us", season_label: "[Season '26]",
+    hero_l: "Grace is essential", hero_r: "Fashion connects us", season_label: "[Monaco KG Essentials - Season '26]",
     brand_tag: "[One Family]",
     brand_left: ["Monaco KG Essentials is more than clothing. We are building a global community — a family.", "A family where it doesn't matter where you come from, who you are, or what you do. Despite our differences, we stand together, support one another, celebrate our cultures, and move as one."],
     brand_right: ["From one community to another, from one country to the next, we are creating something that connects the world through fashion.", "Different people. Different cultures. One family. One movement."],
@@ -78,7 +78,7 @@ const T = {
     privacy_link: "Privacy policy",
     send_preorder: "Send pre-order", sending: "Sending…",
     err_send: "Something went wrong. Please try again in a moment.",
-    err_config: "The form is not connected yet (add formspreeId in config.js).",
+    err_config: "The form is not connected yet [add formspreeId in config.js].",
     choose_country: "Choose…",
 
     thanks_title: "Thank you, {name}.<br>Your pre-order is in.",
@@ -132,7 +132,7 @@ const T = {
 
     legal_tabs: { privacy: "Privacy policy", terms: "Terms of use", cookies: "Cookie policy" },
     last_updated: "Last updated: [date]",
-    legal_note: "[This text should be prepared by a lawyer or a policy generator. Below are the sections required because we collect data from people in different countries, including the EU (GDPR).]",
+    legal_note: "[This text should be prepared by a lawyer or a policy generator. Below are the sections required because we collect data from people in different countries, including the EU [GDPR].]",
     privacy_sections: [
       ["What data we collect", "[Name, email, phone, country and shipping address from the pre-order form]"],
       ["Why we collect it", "[To contact you about your pre-order, ship your piece, tell you about launches]"],

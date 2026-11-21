@@ -18,7 +18,6 @@ const SHOP = {
 
   heroImage: "images/hero.jpg", // фото первого экрана
   aboutImage: "",           // большое фото на странице «О бренде»
-  closingImage: "images/hero.jpg", // большое фото внизу главной, перед подвалом
   shopImage: "images/hero.jpg",    // фото верхнего экрана каталога (400px), одно для All / Men / Women
   howImage: "images/cat-men.jpg",  // фото первого экрана страницы «Как работает предзаказ»
   genderImages: {           // две большие картинки «Мужское / Женское» на главной

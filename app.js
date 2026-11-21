@@ -23,7 +23,8 @@
   // Bag (pre-order basket) lives in localStorage: [{ id, color, size, qty }]
   const BAG_KEY = "mkg-bag";
   const bagGet = () => { try { return (JSON.parse(store.get(BAG_KEY) || "[]") || []).filter((i) => byId(i.id)); } catch { return []; } };
-  const bagSet = (items) => { store.set(BAG_KEY, JSON.stringify(items)); document.querySelectorAll("[data-bag-count]").forEach((e) => (e.textContent = bagCount(items))); };
+  const bagSet = (items) => { store.set(BAG_KEY, JSON.stringify(items)); document.querySelectorAll("[data-bag-count]").forEach((e) => (e.textContent = pad2(bagCount(items)))); };
+  const pad2 = (n) => String(n).padStart(2, "0");
   const bagCount = (items = bagGet()) => items.reduce((n, i) => n + i.qty, 0);
   function bagAdd(id, color, size) {
     const items = bagGet();
@@ -79,7 +80,7 @@
           ${logo}
           <div class="header__r">
             <a class="hlink hlink--d" href="${href("contact")}"${active === "contact" ? ' aria-current="page"' : ""}>${esc(t("nav_contact"))}</a>
-            <a class="hlink" href="${href("bag")}"${active === "bag" ? ' aria-current="page"' : ""}>${esc(t("nav_bag"))} (<span data-bag-count>${bagCount()}</span>)</a>
+            <a class="hlink" href="${href("bag")}"${active === "bag" ? ' aria-current="page"' : ""}>${esc(t("nav_bag"))} [<span data-bag-count>${pad2(bagCount())}</span>]</a>
           </div>
         </header>
         <nav class="drawer" id="drawer" hidden>${nav}</nav>
@@ -88,7 +89,14 @@
 
   // Footer: numbered info strip → black brand block from the mock-up (two texts + logo) →
   // the earlier accordion sections (Contact / Shop / Help / Follow / Legal) + language → copyright.
-  function footer() {
+  // Numbered info strip "01 No payment now · 02 Worldwide shipping · 03 Size guide"
+  // (on home it sits above the Category block, elsewhere right above the footer)
+  function strip() {
+    const links = ["how", "how?s=faq", "size"];
+    return `<nav class="strip" aria-label="Info">${t("strip").map((s, i) => `<a class="ulink" href="${href(links[i])}">0${i + 1} ${esc(s)}</a>`).join("")}</nav>`;
+  }
+
+  function footer(home) {
     const soc = [];
     if (SHOP.instagram) soc.push(`<a href="https://instagram.com/${esc(SHOP.instagram)}" target="_blank" rel="noopener">Instagram</a>`);
     if (SHOP.tiktok) soc.push(`<a href="https://tiktok.com/@${esc(SHOP.tiktok)}" target="_blank" rel="noopener">TikTok</a>`);
@@ -100,9 +108,8 @@
       SHOP.whatsapp ? `<a href="https://wa.me/${esc(SHOP.whatsapp.replace(/\D/g, ""))}" target="_blank" rel="noopener">WhatsApp</a>` : "",
       `<a href="${href("contact")}">${esc(t("contact_title"))}</a>`,
     ].join("");
-    const stripLinks = ["how", "how?s=faq", "size"];
     return `
-    <nav class="strip" aria-label="Info">${t("strip").map((s, i) => `<a class="ulink" href="${href(stripLinks[i])}">0${i + 1} ${esc(s)}</a>`).join("")}</nav>
+    ${home ? "" : strip()}
     <footer class="footer">
       <!-- Figma frame "Footer" (3:5): title + tag, three text columns, motto under column 2, star logo on the right -->
       <div class="ft">
@@ -128,8 +135,8 @@
   // ---------- pages ----------
   const pages = {};
 
-  // Home = Figma "Frame 351 + 352" (1920 artboard): hero with centred logo → New collection (6 tiles) →
-  // Category (Men / Women) → closing photo. The brand texts + star logo live in the shared footer (Figma "Footer").
+  // Home = Figma "Home" (0:3, 1920 artboard): hero (texts left/right, small logo + Shop now in the centre) →
+  // New collection (6 tiles) → info strip 01/02/03 → Category (Men / Women) → shared footer (Figma "Footer").
   const bg = (src) => (src ? ` style="background-image:url('${esc(src)}')"` : "");
   pages.home = () => {
     const items = PRODUCTS.slice().sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)).slice(0, 6);
@@ -138,11 +145,11 @@
         <span class="tile__cap"><span>${esc(L(p.name))}</span><span>${esc(price(p))}</span></span></a>`).join("");
     const cats = ["men", "women"].map((g) => `<a class="hc__tile hc__tile--${g}" href="${href("shop?g=" + g)}">
         ${SHOP.genderImages[g] ? `<img src="${esc(SHOP.genderImages[g])}" alt="" loading="lazy">` : ""}
-        <span class="hc__label"><b>${esc(t("genders")[g])}</b><span>${esc(t("season_label"))}</span></span></a>`).join("");
+        <span class="hc__label"><b>${esc(t("genders")[g])}</b><span class="hc__shop">${esc(t("shop_now"))}</span></span></a>`).join("");
 
     return `
     <section class="hh"${bg(SHOP.heroImage)}>
-      <img class="hh__logo" src="images/logo-hero.png" alt="${esc(SHOP.name)}" width="600" height="569">
+      <span class="hh__logo"><img src="images/logo-hero.png" alt="${esc(SHOP.name)}" width="600" height="569"></span>
       <div class="hh__l"><h1 class="hh__t">${esc(t("hero_l"))}</h1><p class="hh__p">${esc(t("hero_sub"))}</p></div>
       <p class="hh__t hh__r">${esc(t("hero_r"))}</p>
       <a class="hh__shop" href="${href("shop")}">${esc(t("shop_now"))}</a>
@@ -152,13 +159,11 @@
       <div class="hhead"><h2 class="hhead__t">${esc(t("new_collection"))}</h2><a class="hhead__a" href="${href("shop")}">${esc(t("shop_now"))}</a></div>
       <div class="hn__row">${tiles}</div>
     </section>
-
+    ${strip()}
     <section class="hc">
-      <div class="hhead"><h2 class="hhead__t">${esc(t("category"))}</h2><a class="hhead__a hhead__a--s" href="${href("shop")}">${esc(t("shop_now"))}</a></div>
+      <div class="hhead"><h2 class="hhead__t">${esc(t("category"))}</h2><span class="hhead__note">${esc(t("season_label"))}</span></div>
       <div class="hc__grid">${cats}</div>
-    </section>
-
-    <section class="hp"${bg(SHOP.closingImage)} role="img" aria-label="${esc(SHOP.name)}"></section>`;
+    </section>`;
   };
 
   // Catalogue: 400px photo screen with the title → bar with All / Men / Women + count → 4-up grid.
@@ -237,7 +242,7 @@
     return `<option value="">${esc(t("choose_country"))}</option>` + list.map(([c, n]) => `<option value="${esc(n)}">${esc(n)}</option>`).join("");
   }
   const req = (label) => `${esc(label)} *`;
-  const opt = (label) => `${esc(label)} <span class="muted">(${esc(t("optional"))})</span>`;
+  const opt = (label) => `${esc(label)} <span class="muted">[${esc(t("optional"))}]</span>`;
   const consent = () => `<label class="check"><input type="checkbox" name="consent" value="yes" required><span>${t("consent", { privacy: `<a href="${href("legal/privacy")}" target="_blank">${esc(t("privacy_link"))}</a>` })} *</span></label>`;
 
   // Bag page: items on the left (photo, name, colour / size, qty, price, remove), pre-order form on the right
@@ -371,7 +376,7 @@
         <div class="chips">${seg("cat", "tops", t("sg_tops"), cat)}${seg("cat", "bottoms", t("sg_bottoms"), cat)}</div>
         <div class="chips">${seg("unit", "cm", "cm", unit)}${seg("unit", "in", "in", unit)}</div>
       </div>
-      <div class="table-wrap"><table class="table"><thead><tr>${cols.map((c, i) => `<th scope="col">${esc(c)}${i ? ` (${unit})` : ""}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>
+      <div class="table-wrap"><table class="table"><thead><tr>${cols.map((c, i) => `<th scope="col">${esc(c)}${i ? ` [${unit}]` : ""}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>
     </section>
     <section class="block split">
       <div><h2 class="h2">${esc(t("sg_how"))}</h2><p class="body">${esc(t("sg_how_text"))}</p>
@@ -422,7 +427,7 @@
     const titles = { bag: "nav_bag", shop: "nav_collection", about: "nav_about", how: "nav_how", contact: "nav_contact", size: "size_guide" };
     document.title = (titles[page] ? t(titles[page]) + " — " : "") + SHOP.name;
 
-    app.innerHTML = header(page, fn === pages.home ? "home" : fn === pages.how ? "over" : "") +`<main id="main">${fn(args, q)}</main>` + footer();
+    app.innerHTML = header(page, fn === pages.home ? "home" : fn === pages.how ? "over" : "") +`<main id="main">${fn(args, q)}</main>` + footer(fn === pages.home);
     const target = q.get("s") && document.getElementById(q.get("s"));
     if (target) target.scrollIntoView(); else window.scrollTo(0, 0);
     bind(page, q);
@@ -530,7 +535,7 @@
       const ref = "MKG-" + Date.now().toString(36).toUpperCase().slice(-6);
       const lines = items.map((i) => ({ product: L(byId(i.id).name), colour: colorName(i.color), size: i.size, qty: i.qty, price: price(byId(i.id)) }));
       const ok = await sendForm(form, {
-        items: lines.map((l) => `${l.product} — ${l.colour} / ${l.size} × ${l.qty} (${l.price})`).join("\n"),
+        items: lines.map((l) => `${l.product} — ${l.colour} / ${l.size} × ${l.qty} [${l.price}]`).join("\n"),
         preorder_number: ref, _subject: "Pre-order " + ref + " (" + bagCount(items) + " pcs)",
       });
       if (!ok) return;
