@@ -13,7 +13,7 @@ const LANGS = {
 const T = {
   // ---------------- ENGLISH ----------------
   en: {
-    announce: "No payment now · Worldwide shipping",
+    announce: "Every piece is available for pre-order, anywhere in the world",
     nav_shop: "Shop", nav_about: "About", nav_how: "How pre-order works", nav_contact: "Contact",
     menu: "Menu", close: "Close",
     lang_banner: "Looks like you speak {lang}. Switch?", lang_switch: "Switch", lang_stay: "Stay in English",
@@ -27,7 +27,11 @@ const T = {
     cards: [["Our story", "about"], ["How pre-order works", "how"], ["Contact us", "contact"]],
     strip: ["No payment now", "Worldwide shipping", "Size guide"],
     footer_vision: "At Monaco KG Essentials, our vision is to bring fashion to every part of the world and use it as a powerful way to connect people beyond borders, cultures, backgrounds, and differences.",
-    footer_community: "From one community to another, from one country to the next, our goal is to create something that connects the world through fashion.",
+    hero_l: "Grace is essential", hero_r: "Fashion connects us", season_label: "[Season '26]",
+    brand_tag: "[One Family]",
+    brand_left: ["Monaco KG Essentials is more than clothing. We are building a global community — a family.", "A family where it doesn't matter where you come from, who you are, or what you do. Despite our differences, we stand together, support one another, celebrate our cultures, and move as one."],
+    brand_right: ["From one community to another, from one country to the next, we are creating something that connects the world through fashion.", "Different people. Different cultures. One family. One movement."],
+    brand_motto: "[Grace is essential. Fashion connects us]",    footer_community: "From one community to another, from one country to the next, our goal is to create something that connects the world through fashion.",
     f_legal: "Legal", f_contact: "Contact", language: "Language",
     vision_eyebrow: "Our vision",
     vision_text: "To bring fashion to every part of the world and use it as a powerful way to connect people beyond borders, cultures, backgrounds, and differences.",
@@ -147,7 +151,7 @@ const T = {
 
   // ---------------- РУССКИЙ ----------------
   ru: {
-    announce: "Без оплаты сейчас · Доставка по всему миру",
+    announce: "Все вещи доступны по предзаказу — с доставкой по всему миру",
     nav_shop: "Каталог", nav_about: "О бренде", nav_how: "Как работает предзаказ", nav_contact: "Контакты",
     menu: "Меню", close: "Закрыть",
     lang_banner: "Похоже, вам удобнее {lang}. Переключить?", lang_switch: "Переключить", lang_stay: "Остаться на русском",
@@ -161,7 +165,11 @@ const T = {
     cards: [["Наша история", "about"], ["Как работает предзаказ", "how"], ["Связаться с нами", "contact"]],
     strip: ["Без оплаты сейчас", "Доставка по всему миру", "Таблица размеров"],
     footer_vision: "Наша цель в Monaco KG Essentials — донести моду до каждого уголка мира и сделать её способом объединять людей вне границ, культур, происхождения и различий.",
-    footer_community: "От одного сообщества к другому, от одной страны к другой — мы создаём то, что объединяет мир через моду.",
+    hero_l: "Грация — главное", hero_r: "Мода объединяет нас", season_label: "[Сезон '26]",
+    brand_tag: "[Одна семья]",
+    brand_left: ["Monaco KG Essentials — это больше, чем одежда. Мы строим глобальное сообщество — семью.", "Семью, где неважно, откуда ты, кто ты и чем занимаешься. Несмотря на различия, мы держимся вместе, поддерживаем друг друга, ценим наши культуры и движемся как одно целое."],
+    brand_right: ["От одного сообщества к другому, от одной страны к другой — мы создаём то, что объединяет мир через моду.", "Разные люди. Разные культуры. Одна семья. Одно движение."],
+    brand_motto: "[Грация — главное. Мода объединяет нас]",    footer_community: "От одного сообщества к другому, от одной страны к другой — мы создаём то, что объединяет мир через моду.",
     f_legal: "Документы", f_contact: "Контакты", language: "Язык",
     vision_eyebrow: "Наше видение",
     vision_text: "Донести моду до каждого уголка мира и сделать её способом объединять людей — вне границ, культур, происхождения и различий.",
@@ -281,7 +289,7 @@ const T = {
 
   // ---------------- FRANÇAIS ----------------
   fr: {
-    announce: "Aucun paiement maintenant · Livraison dans le monde entier",
+    announce: "Toutes les pièces sont disponibles en précommande, partout dans le monde",
     nav_shop: "Boutique", nav_about: "À propos", nav_how: "Comment fonctionne la précommande", nav_contact: "Contact",
     menu: "Menu", close: "Fermer",
     lang_banner: "Vous parlez {lang} ? Changer de langue ?", lang_switch: "Changer", lang_stay: "Rester en français",
@@ -295,7 +303,11 @@ const T = {
     cards: [["Notre histoire", "about"], ["La précommande", "how"], ["Nous contacter", "contact"]],
     strip: ["Aucun paiement maintenant", "Livraison dans le monde entier", "Guide des tailles"],
     footer_vision: "Chez Monaco KG Essentials, notre vision est d'apporter la mode partout dans le monde et d'en faire un moyen puissant de relier les gens au-delà des frontières, des cultures, des origines et des différences.",
-    footer_community: "D'une communauté à l'autre, d'un pays à l'autre, notre objectif est de créer quelque chose qui relie le monde à travers la mode.",
+    hero_l: "La grâce est essentielle", hero_r: "La mode nous relie", season_label: "[Saison '26]",
+    brand_tag: "[Une famille]",
+    brand_left: ["Monaco KG Essentials, c'est plus que des vêtements. Nous construisons une communauté mondiale — une famille.", "Une famille où peu importe d'où tu viens, qui tu es ou ce que tu fais. Malgré nos différences, nous restons unis, nous nous soutenons, célébrons nos cultures et avançons ensemble."],
+    brand_right: ["D'une communauté à l'autre, d'un pays à l'autre, nous créons quelque chose qui relie le monde à travers la mode.", "Des gens différents. Des cultures différentes. Une famille. Un mouvement."],
+    brand_motto: "[La grâce est essentielle. La mode nous relie]",    footer_community: "D'une communauté à l'autre, d'un pays à l'autre, notre objectif est de créer quelque chose qui relie le monde à travers la mode.",
     f_legal: "Mentions légales", f_contact: "Contact", language: "Langue",
     vision_eyebrow: "Notre vision",
     vision_text: "Apporter la mode dans chaque partie du monde et en faire un moyen puissant de relier les gens, au-delà des frontières, des cultures, des origines et des différences.",

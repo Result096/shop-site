@@ -18,12 +18,11 @@ const SHOP = {
 
   heroImage: "images/hero.jpg", // фото первого экрана
   aboutImage: "",           // большое фото на странице «О бренде»
+  closingImage: "images/hero.jpg", // большое фото внизу главной, перед подвалом
+  howImage: "images/cat-men.jpg",  // фото первого экрана страницы «Как работает предзаказ»
   genderImages: {           // две большие картинки «Мужское / Женское» на главной
-    men: "", women: "",     // например "images/men.jpg"
+    men: "images/cat-men.jpg", women: "images/cat-women.jpg",
   },
-  editorialImage: "",       // фон тёмного блока «Как работает предзаказ» на главной
-  communityImages: [],      // 3 фото для карточек «Наша история / Предзаказ / Контакты»
-  season: "[Season '26]",   // подпись рядом с «Категории», например "AUTUMN_WINTER '26–'27"
 };
 
 // ============================================================

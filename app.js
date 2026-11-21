@@ -46,25 +46,26 @@
   }
 
   // ---------- layout ----------
-  // Header: Collection / About / Pre-order on the left, logo in the middle, contact + language on the right.
-  // On the home page it lies transparent over the hero photo (white text, outlined logo).
-  function header(active, over) {
-    const links = [["shop", "nav_collection"], ["about", "nav_about"], ["how", "nav_how"], ["contact", "nav_contact"]];
+  // Header from the Figma mock-up: COLLECTION + MENU on the left, CONTACT + language on the right.
+  // mode "home": transparent over the hero, no logo (the big logo sits in the hero itself);
+  // mode "over": transparent over a page photo with the white logo; "" : white sticky bar.
+  function header(active, mode) {
+    const links = [["shop", "nav_collection"], ["about", "nav_about"], ["how", "nav_how"], ["size", "size_guide"], ["contact", "nav_contact"]];
     const nav = links.map(([p, k]) => `<a href="${href(p)}"${active === p ? ' aria-current="page"' : ""}>${esc(t(k))}</a>`).join("");
     const opts = Object.keys(LANGS).map((l) => `<option value="${l}"${l === lang ? " selected" : ""}>${l.toUpperCase()}</option>`).join("");
+    const logo = mode === "home" ? `<span></span>`
+      : `<a class="logo" href="${href("")}"><img src="${mode ? "images/logo-hero.png" : "images/logo-header.png"}" alt="${esc(SHOP.name)}" width="${mode ? 600 : 368}" height="${mode ? 569 : 240}"></a>`;
     return `
       <div class="announce">${esc(t("announce"))}</div>
-      <div class="top${over ? " top--over" : ""}">
+      <div class="top${mode ? " top--over" : ""}">
         <header class="header">
           <div class="header__l">
-            <button class="icon-btn menu-btn" id="menu-btn" aria-label="${esc(t("menu"))}" aria-expanded="false">
-              <svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 1h20M0 7h20M0 13h20"/></svg>
-            </button>
-            ${links.slice(0, 3).map(([p, k]) => `<a class="hlink" href="${href(p)}"${active === p ? ' aria-current="page"' : ""}>${esc(t(k))}</a>`).join("")}
+            <a class="hlink hlink--d" href="${href("shop")}"${active === "shop" ? ' aria-current="page"' : ""}>${esc(t("nav_collection"))}</a>
+            <button class="hlink" id="menu-btn" aria-expanded="false" aria-controls="drawer">${esc(t("menu"))}</button>
           </div>
-          <a class="logo" href="${href("")}"><img src="${over ? "images/logo.png" : "images/logo-header.png"}" alt="${esc(SHOP.name)}" width="${over ? 429 : 368}" height="${over ? 320 : 240}"></a>
+          ${logo}
           <div class="header__r">
-            <a class="hlink" href="${href("contact")}"${active === "contact" ? ' aria-current="page"' : ""}>${esc(t("nav_contact"))}</a>
+            <a class="hlink hlink--d" href="${href("contact")}"${active === "contact" ? ' aria-current="page"' : ""}>${esc(t("nav_contact"))}</a>
             <label class="lang"><span class="sr">Language</span><select id="lang-select">${opts}</select></label>
           </div>
         </header>
@@ -124,67 +125,50 @@
   // ---------- pages ----------
   const pages = {};
 
-  // Home = brand mock-up look (transparent header over the photo, six tiles per row, Men / Women halves,
-  // black brand footer) + the earlier structure: rail arrows, "+ 001" pre-order block, community cards.
-  // Section headings follow the type rule: body + 4px, bold.
-  const railCtl = () => `<div class="rail__ctl">
-      <button type="button" data-rail="-1" aria-label="${esc(t("prev"))}"><svg width="8" height="12" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M7 1L2 6l5 5"/></svg></button>
-      <button type="button" data-rail="1" aria-label="${esc(t("next"))}"><svg width="8" height="12" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M1 1l5 5-5 5"/></svg></button>
-    </div>`;
-
+  // Home = Figma "Frame 351 + 352" (1920 artboard): hero with centred logo → New collection (6 tiles) →
+  // Category (Men / Women) → black brand block with the star logo → closing photo. Footer is shared.
+  const bg = (src) => (src ? ` style="background-image:url('${esc(src)}')"` : "");
   pages.home = () => {
-    const items = PRODUCTS.slice().sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+    const items = PRODUCTS.slice().sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)).slice(0, 6);
     const tiles = items.map((p) => `<a class="tile" href="${href("product/" + p.id)}">
         <div class="tile__media">${media(p, 0)}</div>
         <span class="tile__cap"><span>${esc(L(p.name))}</span><span>${esc(price(p))}</span></span></a>`).join("");
-    const gTiles = ["men", "women"].map((g) => `<a class="gcat" href="${href("shop?g=" + g)}">
-        ${SHOP.genderImages[g] ? `<img src="${esc(SHOP.genderImages[g])}" alt="" loading="lazy">` : `<div class="gcat__ph"></div>`}
-        <span class="gcat__label">${esc(t("genders")[g])}</span></a>`).join("");
-    const cardLinks = t("cards").map(([title, page], i) => `<a class="bcard" href="${href(page)}">
-        ${SHOP.communityImages[i] ? `<img src="${esc(SHOP.communityImages[i])}" alt="" loading="lazy">` : `<div class="bcard__ph"></div>`}
-        <span class="bcard__t">${esc(title)}</span><span class="bcard__l">${esc(t("view_more"))}</span></a>`).join("");
+    const cats = ["men", "women"].map((g) => `<a class="hc__tile hc__tile--${g}" href="${href("shop?g=" + g)}">
+        ${SHOP.genderImages[g] ? `<img src="${esc(SHOP.genderImages[g])}" alt="" loading="lazy">` : ""}
+        <span class="hc__label"><b>${esc(t("genders")[g])}</b><span>${esc(t("season_label"))}</span></span></a>`).join("");
+    const paras = (arr) => arr.map((s) => `<p>${esc(s)}</p>`).join("");
 
     return `
-    <section class="hero hero--home" ${SHOP.heroImage ? `style="background-image:url('${esc(SHOP.heroImage)}')"` : ""}>
-      <div class="hero__grid">
-        <div class="hero__text">
-          <h1 class="hero__title">${t("hero_title")}</h1>
-          <p>${esc(t("hero_sub"))}</p>
-        </div>
-        <a class="ulink hero__link" href="${href("shop")}">${esc(t("shop_now"))}</a>
-        <a class="ulink hero__link2" href="${href("about")}">${esc(t("discover_more"))}</a>
+    <section class="hh"${bg(SHOP.heroImage)}>
+      <img class="hh__logo" src="images/logo-hero.png" alt="${esc(SHOP.name)}" width="600" height="569">
+      <div class="hh__l"><h1 class="hh__t">${esc(t("hero_l"))}</h1><p class="hh__p">${esc(t("hero_sub"))}</p></div>
+      <p class="hh__t hh__r">${esc(t("hero_r"))}</p>
+      <a class="hh__shop" href="${href("shop")}">${esc(t("shop_now"))}</a>
+    </section>
+
+    <section class="hn">
+      <div class="hhead"><h2 class="hhead__t">${esc(t("new_collection"))}</h2><a class="hhead__a" href="${href("shop")}">${esc(t("shop_now"))}</a></div>
+      <div class="hn__row">${tiles}</div>
+    </section>
+
+    <section class="hc">
+      <div class="hhead"><h2 class="hhead__t">${esc(t("category"))}</h2><a class="hhead__a hhead__a--s" href="${href("shop")}">${esc(t("shop_now"))}</a></div>
+      <div class="hc__grid">${cats}</div>
+    </section>
+
+    <section class="hb">
+      <img class="hb__logo" src="images/logo-star.png" alt="" width="900" height="854" loading="lazy">
+      <div class="hb__l">
+        <p class="hb__h">${esc(SHOP.name)}</p><p class="hb__tag">${esc(t("brand_tag"))}</p>
+        <div class="hb__p">${paras(t("brand_left"))}</div>
+      </div>
+      <div class="hb__r">
+        <div class="hb__p">${paras(t("brand_right"))}</div>
+        <p class="hb__tag">${esc(t("brand_motto"))}</p>
       </div>
     </section>
 
-    <section class="newc rail">
-      <div class="sec-head">
-        <h2 class="h2">${esc(t("new_collection"))}</h2>
-        <a class="ulink" href="${href("shop")}">${esc(t("shop_now"))}</a>
-        ${railCtl()}
-      </div>
-      <div class="newc__row rail__track">${tiles}</div>
-    </section>
-
-    <section class="gcats">
-      <div class="sec-head">
-        <h2 class="h2">${esc(t("category"))}</h2>
-        <span class="label">${esc(SHOP.season)}</span>
-      </div>
-      <div class="gcats__grid">${gTiles}</div>
-    </section>
-
-    <section class="edit" ${SHOP.editorialImage ? `style="background-image:url('${esc(SHOP.editorialImage)}')"` : ""}>
-      <div class="edit__head"><p class="label">${esc(t("how_eyebrow"))}</p><h2 class="h2">${esc(t("how_title"))}</h2></div>
-      <div class="edit__grid">
-        ${t("steps3").map(([h, d], i) => `<div class="edit__item"><p class="label">+ 00${i + 1}</p><h3 class="h3">${esc(h)}</h3><p>${esc(d)}</p></div>`).join("")}
-      </div>
-      <a class="ulink" href="${href("how")}">${esc(t("learn_more"))}</a>
-    </section>
-
-    <section class="cards">
-      <h2 class="h2">${t("community_title")}</h2>
-      <div class="cards__grid">${cardLinks}</div>
-    </section>`;
+    <section class="hp"${bg(SHOP.closingImage)} role="img" aria-label="${esc(SHOP.name)}"></section>`;
   };
 
   // Shop state lives in the URL query: #/en/shop?cat=tops&color=black&size=M&sort=new
@@ -351,14 +335,17 @@
     </section>`;
   };
 
+  // Pre-order page: first screen = photo + page title (same type as the home hero), then a white info block.
   pages.how = () => `
-    <section class="block page-head">
-      <p class="eyebrow">${esc(t("how_eyebrow"))}</p>
-      <h1 class="h1">${esc(t("how_page_title"))}</h1>
+    <section class="pgh"${bg(SHOP.howImage)}>
+      <div class="pgh__in"><p class="pgh__eyebrow">${esc(SHOP.name)}</p><h1 class="hh__t">${esc(t("nav_how"))}</h1></div>
+    </section>
+    <section class="block info-head">
+      <h2 class="hhead__t">${esc(t("how_page_title"))}</h2>
       <p class="lead-s">${esc(t("how_page_sub"))}</p>
     </section>
     <section class="block"><ol class="steps4">${t("steps4").map(([h, d], i) => `<li><span class="muted">${esc(t("step"))} ${i + 1}</span><h2 class="h3">${esc(h)}</h2><p>${esc(d)}</p></li>`).join("")}</ol></section>
-    <section class="band" id="faq"><div class="block faq">
+    <section id="faq"><div class="block faq">
       <div><p class="eyebrow">${esc(t("faq"))}</p><h2 class="h2">${esc(t("questions"))}</h2><p class="muted">${esc(t("didnt_find"))} <a class="ulink" href="${href("contact")}">${esc(t("contact_us"))}</a></p></div>
       <div class="acc-group">${t("faqs").map(([q, a], i) => `<details${i === 0 ? " open" : ""}><summary>${esc(q)}</summary><p>${esc(a).replace("{sizeguide}", `<a class="ulink" href="${href("size")}">${esc(t("size_guide").toLowerCase())}</a>`)}</p></details>`).join("")}</div>
     </div></section>
@@ -456,7 +443,7 @@
     const titles = { shop: "nav_collection", about: "nav_about", how: "nav_how", contact: "nav_contact", size: "size_guide" };
     document.title = (titles[page] ? t(titles[page]) + " — " : "") + SHOP.name;
 
-    app.innerHTML = langBanner() + header(page, fn === pages.home) +`<main id="main">${fn(args, q)}</main>` + footer();
+    app.innerHTML = langBanner() + header(page, fn === pages.home ? "home" : fn === pages.how ? "over" : "") +`<main id="main">${fn(args, q)}</main>` + footer();
     const target = q.get("s") && document.getElementById(q.get("s"));
     if (target) target.scrollIntoView(); else window.scrollTo(0, 0);
     bind(page, q);
@@ -499,10 +486,6 @@
 
     document.getElementById("lang-select").onchange = (e) => switchLang(e.target.value);
     document.getElementById("lang-select-f").onchange = (e) => switchLang(e.target.value);
-    document.querySelectorAll("[data-rail]").forEach((b) => (b.onclick = () => {
-      const track = b.closest(".rail").querySelector(".rail__track");
-      track.scrollBy({ left: Number(b.dataset.rail) * track.clientWidth * 0.8, behavior: "smooth" });
-    }));
     const banner = document.getElementById("lang-banner");
     if (banner) banner.onclick = (e) => {
       const b = e.target.closest("button"); if (!b) return;
